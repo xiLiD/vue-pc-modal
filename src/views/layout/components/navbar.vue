@@ -1,68 +1,91 @@
 <template>
   <div class="headerContent box-start align-end Pl-30">
-    <div class="menuItem box-v-center"
-         :class="{ activeMenu: activeIndex === 1 }"
-         @click="goPage('/main/index')">
+    <div
+      class="menuItem box-v-center"
+      :class="{ activeMenu: activeIndex === 1 }"
+      @click="goPage('/index')"
+    >
       首页
     </div>
-    <div class="menuItem box-v-center"
-         :class="{ activeMenu: activeIndex === 2 }"
-         @click="goPage('/main/turnNotification')">
+    <div
+      class="menuItem box-v-center"
+      :class="{ activeMenu: activeIndex === 2 }"
+      @click="goPage('/turnNotification')"
+    >
       携转战况通报
     </div>
-    <div class="menuItem box-v-center"
-         :class="{ activeMenu: activeIndex === 3 }">
+    <div
+      class="menuItem box-v-center"
+      :class="{ activeMenu: activeIndex === 3 }"
+    >
       <!-- 个人市场出账收入预测 -->
-      <el-dropdown trigger="click"
-                   @command="goPage">
+      <el-dropdown trigger="click" @command="goPage">
         <span class="el-dropdown-link">
           个人市场出账收入预测<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="/main/markIncome">个人市场收入</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/plan">个人套餐</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/valuePack">个人价值包</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/newBussiness">个人新业务</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/company">个人政务</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/family">个人家庭</el-dropdown-item>
-          <el-dropdown-item command="/main/markIncome/outside">个人套外</el-dropdown-item>
+          <el-dropdown-item command="/markIncome"
+            >个人市场收入</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/plan"
+            >个人套餐</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/valuePack"
+            >个人价值包</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/newBussiness"
+            >个人新业务</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/company"
+            >个人政务</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/family"
+            >个人家庭</el-dropdown-item
+          >
+          <el-dropdown-item command="/markIncome/outside"
+            >个人套外</el-dropdown-item
+          >
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="menuItem box-v-center"
-         :class="{ activeMenu: activeIndex === 4 }"
-         @click="goPage('/main/turnPortrait')">
+    <div
+      class="menuItem box-v-center"
+      :class="{ activeMenu: activeIndex === 4 }"
+      @click="goPage('/turnPortrait')"
+    >
       携转客户画像
     </div>
-    <div class="menuItem box-v-center"
-         :class="{ activeMenu: activeIndex === 5 }"
-         @click="goPage('/main/leaflet')">
+    <div
+      class="menuItem box-v-center"
+      :class="{ activeMenu: activeIndex === 5 }"
+      @click="goPage('/leaflet')"
+    >
       地图
     </div>
   </div>
 </template>
 
 <script>
-import routeDate from '@/router/routeDate.js';
+import routeDate from "@/router/routeDate.js";
 export default {
-  data () {
+  data() {
     return {
-      activeIndex: 1
+      activeIndex: 1,
     };
   },
   watch: {
     $route: {
-      handler (to, from) {
+      handler(to, from) {
         this.activeIndex = to.meta.navbar;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
-    goPage (path) {
+    goPage(path) {
       this.$router.push(path);
-    }
-  }
+    },
+  },
 };
 </script>
 

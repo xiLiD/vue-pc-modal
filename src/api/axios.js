@@ -1,19 +1,19 @@
-import { requestGet, requestPost } from "./request";
+import { requestGet, requestPost, requestFile, requestExcel } from "./request";
 import url from "./url";
 import base from "@/api/baseUrl";
 
-function getParams (params) {
-  let baseUrl = process.env.NODE_ENV === "development" ? "" : base.production;
+function getParams(params) {
+  let baseUrl = process.env.NODE_ENV === "development" ? base.development : base.production;
   return Object.assign(
     {},
     {
-      url: baseUrl + "/gxyundata" + params.url,
+      url: baseUrl + "/iopWeb" + params.url,
       data: params.data,
       showLoading: params.showLoading
     }
   );
 }
-var getToken = function (params) {
+const getToken = function (params) {
   params.url = url.getToken;
   return requestPost(getParams(params));
 };
