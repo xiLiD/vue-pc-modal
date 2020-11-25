@@ -9,12 +9,34 @@ import {
     timestampToTime,
     formatSeconds
 } from "@/utils/index";
-import element from '@/UI/ElementUI/template.js' // element-ui UI组件按需引入
+// import element from '@/UI/ElementUI/template.js' // element-ui UI组件按需引入
 import * as filters from "./filters"; // global filters
+import element from 'element-ui'
+import { Loading } from 'element-ui'
 import "element-ui/lib/theme-chalk/index.css";
+import '@/utils/utils-webpack/console/rewriteConsole'
+import '@/utils/utils-webpack/console/vConsole'
 import "@/styles/common.css";
 import "@/styles/index.css";
-
+Vue.prototype.$httpLoading = {
+    show: function () {
+        Loading.service({
+            lock: true,
+            text: "加载中...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
+        });
+    },
+    close: function () {
+        let loadingInstance = Loading.service({
+            lock: true,
+            text: "加载中...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
+        });
+        loadingInstance.close();
+    }
+};
 Vue.use(element); // global css
 Vue.config.productionTip = false;
 Object.keys(filters).forEach(key => {
