@@ -1,7 +1,6 @@
 <template>
   <div class="app-main">
-    <transition name="fade-transform"
-                mode="out-in">
+    <transition name="fade-transform" mode="out-in">
       <!-- <keep-alive :include="cachedViews"> -->
       <router-view ref="currentView" />
       <!-- </keep-alive> -->
@@ -10,20 +9,20 @@
 </template>
 <script>
 export default {
-  name: 'AppMain',
+  name: "AppMain",
   methods: {
-    refresh () {
-      this.$refs.currentView.refresh()
-    }
-  }
-}
+    refresh() {
+      this.$refs.currentView.refresh();
+    },
+  },
+};
 </script>
 <style scoped>
-.app-main {
-  /*84 = navbar + tags-view = 50 +34 */
-  height: calc(100vh - 58px);
+/* .app-main {
+  height: calc(100vh);
   position: relative;
   overflow: hidden;
-  margin-top: 58px;
-}
+  display: flex;
+  justify-content: center;
+} */
 </style>

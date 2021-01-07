@@ -10,8 +10,7 @@ Router.prototype.replace = function push(location) {
   return originalReplace.call(this, location).catch(err => err);
 };
 import routeDate from './routeDate'
-import Layout from "@/views/layout/layout.vue";
 export default new Router({
-  mode : 'hash',
+  mode: 'hash',
   routes: [routeDate]
 });

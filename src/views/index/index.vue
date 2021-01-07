@@ -1,7 +1,6 @@
 <template>
   <div class="pageContent">
-    <el-row :gutter="20"
-            class="Mb-20">
+    <el-row :gutter="20" class="Mb-20">
       <el-col :span="8">
         <div class="twoTool2 box-start size-header">
           <div class="W50 box-v-start">
@@ -63,32 +62,39 @@
         </div>
       </el-col>
     </el-row>
-    <el-row :gutter="20"
-            class="Mb-20">
+    <el-row :gutter="20" class="Mb-20">
       <el-col :span="8">
         <div class="threeTool">
           <div class="W100 bb1px">
             <p class="Mb-6 font-bold">实时日指标</p>
           </div>
-          <div class="W100  box-start headerTitle">
-            <div style="width:70%">名称</div>
-            <div style="width:10%;text-align:center">上次</div>
-            <div style="width:10%;text-align:center">本次</div>
-            <div style="width:10%;text-align:center">对比</div>
+          <div class="W100 box-start headerTitle">
+            <div style="width: 70%">名称</div>
+            <div style="width: 10%; text-align: center">上次</div>
+            <div style="width: 10%; text-align: center">本次</div>
+            <div style="width: 10%; text-align: center">对比</div>
           </div>
-          <div class="W100  box-start itemTitle gray-medium"
-               v-for="(item, index) in dateArr"
-               :key="index">
-            <div style="width:70%">{{ item.name }}</div>
-            <div style="width:11%;text-align:center">{{ item.last }}</div>
-            <div style="width:11%;text-align:center">{{ item.now }}</div>
-            <div style="width:8%;text-align:center">
-              <i v-show="item.contrast === 'up'"
-                 class="el-icon-top upcolor"></i>
-              <i v-show="item.contrast === 'dowm'"
-                 class="el-icon-right nocolor"></i>
-              <i v-show="item.contrast === 'no'"
-                 class="el-icon-bottom dowmcolor"></i>
+          <div
+            class="W100 box-start itemTitle gray-medium"
+            v-for="(item, index) in dateArr"
+            :key="index"
+          >
+            <div style="width: 70%">{{ item.name }}</div>
+            <div style="width: 11%; text-align: center">{{ item.last }}</div>
+            <div style="width: 11%; text-align: center">{{ item.now }}</div>
+            <div style="width: 8%; text-align: center">
+              <i
+                v-show="item.contrast === 'up'"
+                class="el-icon-top upcolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'dowm'"
+                class="el-icon-right nocolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'no'"
+                class="el-icon-bottom dowmcolor"
+              ></i>
             </div>
           </div>
         </div>
@@ -98,25 +104,33 @@
           <div class="W100 bb1px">
             <p class="Mb-6 font-bold">实时月指标</p>
           </div>
-          <div class="W100  box-start headerTitle">
-            <div style="width:70%">名称</div>
-            <div style="width:10%;text-align:center">上次</div>
-            <div style="width:10%;text-align:center">本次</div>
-            <div style="width:10%;text-align:center">对比</div>
+          <div class="W100 box-start headerTitle">
+            <div style="width: 70%">名称</div>
+            <div style="width: 10%; text-align: center">上次</div>
+            <div style="width: 10%; text-align: center">本次</div>
+            <div style="width: 10%; text-align: center">对比</div>
           </div>
-          <div class="W100  box-start itemTitle gray-medium"
-               v-for="(item, index) in dateArr"
-               :key="index">
-            <div style="width:70%">{{ item.name }}</div>
-            <div style="width:11%;text-align:center">{{ item.last }}</div>
-            <div style="width:11%;text-align:center">{{ item.now }}</div>
-            <div style="width:8%;text-align:center">
-              <i v-show="item.contrast === 'up'"
-                 class="el-icon-top upcolor"></i>
-              <i v-show="item.contrast === 'dowm'"
-                 class="el-icon-right nocolor"></i>
-              <i v-show="item.contrast === 'no'"
-                 class="el-icon-bottom dowmcolor"></i>
+          <div
+            class="W100 box-start itemTitle gray-medium"
+            v-for="(item, index) in dateArr"
+            :key="index"
+          >
+            <div style="width: 70%">{{ item.name }}</div>
+            <div style="width: 11%; text-align: center">{{ item.last }}</div>
+            <div style="width: 11%; text-align: center">{{ item.now }}</div>
+            <div style="width: 8%; text-align: center">
+              <i
+                v-show="item.contrast === 'up'"
+                class="el-icon-top upcolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'dowm'"
+                class="el-icon-right nocolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'no'"
+                class="el-icon-bottom dowmcolor"
+              ></i>
             </div>
           </div>
         </div>
@@ -126,25 +140,33 @@
           <div class="W100 bb1px">
             <p class="Mb-6 font-bold">实时累计期末指标</p>
           </div>
-          <div class="W100  box-start headerTitle">
-            <div style="width:70%">名称</div>
-            <div style="width:10%;text-align:center">上次</div>
-            <div style="width:10%;text-align:center">本次</div>
-            <div style="width:10%;text-align:center">对比</div>
+          <div class="W100 box-start headerTitle">
+            <div style="width: 70%">名称</div>
+            <div style="width: 10%; text-align: center">上次</div>
+            <div style="width: 10%; text-align: center">本次</div>
+            <div style="width: 10%; text-align: center">对比</div>
           </div>
-          <div class="W100  box-start itemTitle gray-medium"
-               v-for="(item, index) in dateArr"
-               :key="index">
-            <div style="width:70%">{{ item.name }}</div>
-            <div style="width:11%;text-align:center">{{ item.last }}</div>
-            <div style="width:11%;text-align:center">{{ item.now }}</div>
-            <div style="width:8%;text-align:center">
-              <i v-show="item.contrast === 'up'"
-                 class="el-icon-top upcolor"></i>
-              <i v-show="item.contrast === 'dowm'"
-                 class="el-icon-right nocolor"></i>
-              <i v-show="item.contrast === 'no'"
-                 class="el-icon-bottom dowmcolor"></i>
+          <div
+            class="W100 box-start itemTitle gray-medium"
+            v-for="(item, index) in dateArr"
+            :key="index"
+          >
+            <div style="width: 70%">{{ item.name }}</div>
+            <div style="width: 11%; text-align: center">{{ item.last }}</div>
+            <div style="width: 11%; text-align: center">{{ item.now }}</div>
+            <div style="width: 8%; text-align: center">
+              <i
+                v-show="item.contrast === 'up'"
+                class="el-icon-top upcolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'dowm'"
+                class="el-icon-right nocolor"
+              ></i>
+              <i
+                v-show="item.contrast === 'no'"
+                class="el-icon-bottom dowmcolor"
+              ></i>
             </div>
           </div>
         </div>
@@ -152,41 +174,49 @@
     </el-row>
     <el-row class="Mb-40">
       <el-col :span="8">
-        <div class="threeTool2 Mb-20"
-             style="min-height:361px;border-right:1px #dadada dashed">
+        <div
+          class="threeTool2 Mb-20"
+          style="min-height: 361px; border-right: 1px #dadada dashed"
+        >
           <div class="W100 chartDiv box-justify">
             <div class="size-title font-bold gray-dark">地市携转分析</div>
-            <el-select v-model="value"
-                       placeholder="请选择"
-                       size="small"
-                       @change="changeData">
-              <el-option v-for="item in options"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
+            <el-select
+              v-model="value"
+              placeholder="请选择"
+              size="small"
+              @change="changeData"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
               </el-option>
             </el-select>
           </div>
-          <div id="myChart"
-               class="threeTool2"></div>
+          <div id="myChart" class="threeTool2"></div>
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="threeTool2"
-             style="min-height:361px;border-right:1px #dadada dashed">
+        <div
+          class="threeTool2"
+          style="min-height: 361px; border-right: 1px #dadada dashed"
+        >
           <div class="W100 size-title font-bold gray-dark Mb-20">
             易携入预测总览
           </div>
           <div class="W100 box-justify size-medium">
             <div class="box-v-start">
-              <div class=" size-title font-bold"
-                   style="color:red">1087</div>
+              <div class="size-title font-bold" style="color: red">1087</div>
               <div>易携入用户数</div>
             </div>
-            <el-date-picker v-model="value2"
-                            type="month"
-                            size="small"
-                            placeholder="选择日期">
+            <el-date-picker
+              v-model="value2"
+              type="month"
+              size="small"
+              placeholder="选择日期"
+            >
             </el-date-picker>
             <!-- <div class="box-v-start">
               <div class=" size-title font-bold" style="color:red" >32</div>
@@ -197,26 +227,25 @@
               <div>易携入联通用户数</div>
             </div> -->
           </div>
-          <div class="threeTool2"
-               id="getBackTable"></div>
+          <div class="threeTool2" id="getBackTable"></div>
         </div>
       </el-col>
       <el-col :span="8">
-        <div class="threeTool2"
-             style="min-height:361px">
+        <div class="threeTool2" style="min-height: 361px">
           <div class="W100 size-title font-bold gray-dark Mb-20">
             易携出预测总览
           </div>
           <div class="W100 box-justify size-medium">
             <div class="box-v-start">
-              <div class=" size-title font-bold"
-                   style="color:red">1087</div>
+              <div class="size-title font-bold" style="color: red">1087</div>
               <div>易携出用户数</div>
             </div>
-            <el-date-picker v-model="value3"
-                            type="month"
-                            size="small"
-                            placeholder="选择日期">
+            <el-date-picker
+              v-model="value3"
+              type="month"
+              size="small"
+              placeholder="选择日期"
+            >
             </el-date-picker>
             <!-- <div class="box-v-start">
               <div class=" size-title font-bold" style="color:red" >32</div>
@@ -227,8 +256,7 @@
               <div>易携出联通用户数</div>
             </div> -->
           </div>
-          <div class="threeTool2"
-               id="getBackTable2"></div>
+          <div class="threeTool2" id="getBackTable2"></div>
         </div>
       </el-col>
     </el-row>
@@ -286,7 +314,7 @@ import echarts from "echarts";
 import api from "@/api/axios";
 export default {
   name: "Index",
-  data () {
+  data() {
     return {
       msg: "Welcome to Your Vue.js App",
       value2: null,
@@ -302,13 +330,13 @@ export default {
           name: "当天实时携入用户数-联通",
           last: 20,
           now: 25,
-          contrast: "dowm"
+          contrast: "dowm",
         },
         {
           name: "当天实时携入用户数-电信",
           last: 20,
           now: 25,
-          contrast: "no"
+          contrast: "no",
         },
         // {
         //   name: '当天实时携出用户数',
@@ -320,84 +348,84 @@ export default {
           name: "当天实时携出用户数-联通",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出用户数-电信",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出授权码申请用户数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出授权码申请成功用户数",
           last: 20,
           now: 25,
-          contrast: "dowm"
+          contrast: "dowm",
         },
         {
           name: "当天实时携出授权码申请失败用户数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出授权码申请次数",
           last: 20,
           now: 25,
-          contrast: "no"
+          contrast: "no",
         },
         {
           name: "当天实时携出授权码申请成功次数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出授权码申请失败次数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出销户用户数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出授权码成功下发量",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出条件查询用户数",
           last: 20,
           now: 25,
-          contrast: "up"
+          contrast: "up",
         },
         {
           name: "当天实时携出条件查询次数",
           last: 20,
           now: 25,
-          contrast: "up"
-        }
+          contrast: "up",
+        },
       ],
       options: [
         {
           value: "携出客户数",
-          label: "携出客户数"
+          label: "携出客户数",
         },
         {
           value: "携入客户数",
-          label: "携入客户数"
-        }
+          label: "携入客户数",
+        },
       ],
       value: "携出客户数",
       myChart: null,
@@ -421,14 +449,14 @@ export default {
             "邵阳市",
             "衡阳市",
             "永州市",
-            "郴州市"
+            "郴州市",
           ],
           axisLabel: {
             interval: 0,
             formatter: function (value) {
               return value.split("").join("\n");
-            }
-          }
+            },
+          },
         },
         yAxis: {},
         series: [
@@ -444,20 +472,20 @@ export default {
                   textStyle: {
                     // 数值样式
                     color: "#c19178",
-                    fontSize: 14
-                  }
-                }
-              }
-            }
-          }
-        ]
+                    fontSize: 14,
+                  },
+                },
+              },
+            },
+          },
+        ],
       },
       peiOption: {
         tooltip: {},
         legend: {
           data: ["原因分布"],
           top: 10,
-          left: 10
+          left: 10,
         },
         radar: {
           name: {
@@ -465,16 +493,16 @@ export default {
               color: "#fff",
               backgroundColor: "#999",
               borderRadius: 3,
-              padding: [3, 5]
-            }
+              padding: [3, 5],
+            },
           },
           indicator: [
             { name: "资费不适配", max: 6500 },
             { name: "网络不满意", max: 16000 },
             { name: "宽带不满意", max: 30000 },
-            { name: "合约到期", max: 38000 }
+            { name: "合约到期", max: 38000 },
           ],
-          radius: 80
+          radius: 80,
         },
         series: [
           {
@@ -482,11 +510,11 @@ export default {
             data: [
               {
                 value: [4300, 10000, 28000, 35000, 50000, 19000],
-                name: "原因分布"
-              }
-            ]
-          }
-        ]
+                name: "原因分布",
+              },
+            ],
+          },
+        ],
       },
       // peiOption: {
       //   color: ['#EF684A', '#57CDE6', '#A24AE2', '#1957F8', '#F5A622',
@@ -546,7 +574,7 @@ export default {
         legend: {
           data: ["原因分布"],
           top: 10,
-          left: 10
+          left: 10,
         },
         radar: {
           name: {
@@ -554,16 +582,16 @@ export default {
               color: "#fff",
               backgroundColor: "#999",
               borderRadius: 3,
-              padding: [3, 5]
-            }
+              padding: [3, 5],
+            },
           },
           indicator: [
             { name: "资费不适配", max: 6500 },
             { name: "网络不满意", max: 16000 },
             { name: "宽带不满意", max: 30000 },
-            { name: "合约到期", max: 38000 }
+            { name: "合约到期", max: 38000 },
           ],
-          radius: 80
+          radius: 80,
         },
         series: [
           {
@@ -571,34 +599,34 @@ export default {
             data: [
               {
                 value: [4300, 10000, 28000, 35000, 50000, 19000],
-                name: "原因分布"
-              }
-            ]
-          }
-        ]
-      }
+                name: "原因分布",
+              },
+            ],
+          },
+        ],
+      },
     };
   },
-  mounted () {
+  mounted() {
     this.drawLine();
     this.drawPei();
     this.getData();
   },
   methods: {
-    getData () {
+    getData() {
       let params = {
         name: "张三",
-        age: "李四"
+        age: "李四",
       };
       api.getToken({ data: params });
     },
-    drawLine () {
+    drawLine() {
       // 基于准备好的dom，初始化echarts实例
       this.myChart = echarts.init(document.getElementById("myChart"));
       // 绘制图表
       this.myChart.setOption(this.chartOption);
     },
-    drawPei () {
+    drawPei() {
       this.myChart1 = echarts.init(document.getElementById("getBackTable"));
       this.myChart1.clear();
       this.myChart1.setOption(this.peiOption);
@@ -606,19 +634,19 @@ export default {
       this.myChart2.clear();
       this.myChart2.setOption(this.peiOption2);
     },
-    changeData () {
+    changeData() {
       this.chartOption.series[0].data = this.chartOption.series[0].data.sort(
         this.randomNumber
       );
       this.myChart.setOption(this.chartOption, true);
     },
-    randomNumber () {
+    randomNumber() {
       // randomNumber(a,b) 返回的值大于 0 ，则 b 在 a 的前边；
       // randomNumber(a,b) 返回的值等于 0 ，则a 、b 位置保持不变；
       // randomNumber(a,b) 返回的值小于 0 ，则 a 在 b 的前边。
       return 0.5 - Math.random();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -667,6 +695,7 @@ export default {
     #6bc8fd,
     #3eb4fa
   ); /* 标准的语法（必须放在最后） */
+  filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr="#6bc8fd", endColorstr="#3eb4fa", gradientType="1");
 }
 .twoTool3 {
   position: relative;
@@ -694,6 +723,7 @@ export default {
     #accc67,
     #99c143
   ); /* 标准的语法（必须放在最后） */
+  filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr="#accc67", endColorstr="#99c143", gradientType="1");
 }
 .twoTool4 {
   position: relative;
@@ -721,6 +751,7 @@ export default {
     #f556a8,
     #e40077
   ); /* 标准的语法（必须放在最后） */
+  filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr="#f556a8", endColorstr="#e40077", gradientType="1");
 }
 .pageContent {
   /* margin-top: 20px; */

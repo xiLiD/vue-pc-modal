@@ -1,6 +1,7 @@
+@import './font/iconfont.css';
 body{
   background-color: aliceblue;
-  overflow: hidden!important;
+  /* overflow: hidden!important; */
 }
 .orgTable{
   width: 100%;

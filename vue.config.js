@@ -64,41 +64,40 @@ module.exports = {
     // 生产环境相关配置
     if (isProduction) {
       // 用cdn方式引入
-      config.externals = {
-        'vue': 'Vue',
-        'vuex': 'Vuex',
-        'vue-router': 'VueRouter',
-        'axios': 'axios'
-      }
+      // config.externals = {
+      //   'vue': 'Vue',
+      //   'vuex': 'Vuex',
+      //   'vue-router': 'VueRouter',
+      //   'axios': 'axios'
+      // }
       // 代码压缩
-      config.plugins.push(
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            //生产环境自动删除console
-            compress: {
-              warnings: false, // 若打包错误，则注释这行
-              drop_debugger: true,
-              drop_console: true,
-              pure_funcs: ['console.log'],
-            },
-          },
-          sourceMap: false,
-          parallel: true,
-        })
-      );
+      // config.plugins.push(
+      //   new UglifyJsPlugin({
+      //     uglifyOptions: {
+      //       //生产环境自动删除console
+      //       compress: {
+      //         drop_debugger: true,
+      //         drop_console: true,
+      //         pure_funcs: ['console.log'],
+      //       },
+      //     },
+      //     sourceMap: false,
+      //     parallel: true,
+      //   })
+      // );
 
       // gzip压缩
-      const productionGzipExtensions = ['html', 'js', 'css'];
-      config.plugins.push(
-        new CompressionWebpackPlugin({
-          filename: '[path].gz[query]',
-          algorithm: 'gzip',
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 10240, // 只有大小大于该值的资源会被处理 10240
-          minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-          deleteOriginalAssets: false, // 删除原文件
-        })
-      );
+      // const productionGzipExtensions = ['html', 'js', 'css'];
+      // config.plugins.push(
+      //   new CompressionWebpackPlugin({
+      //     filename: '[path].gz[query]',
+      //     algorithm: 'gzip',
+      //     test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+      //     threshold: 10240, // 只有大小大于该值的资源会被处理 10240
+      //     minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+      //     deleteOriginalAssets: false, // 删除原文件
+      //   })
+      // );
 
       // 公共代码抽离
       config.optimization = {
@@ -166,17 +165,17 @@ module.exports = {
   devServer: {
     open: process.platform === "darwin",
     // host: "192.168.1.182",
-    host: "192.168.1.182",
+    host: "",
     port: 9090,
     https: false,
     hotOnly: false,
     proxy: {
-      "/iopWeb": {
-        target: "https://200.200.1.172:9090",
+      "/node": {
+        target: "http://192.168.199.60:10111",
         // target : 'http://192.168.199.35:9090',
         changeOrigin: true,
         pathRewrite: {
-          "^/iopWeb": ""
+          "^/node": ""
         }
       }
     } // 设置代理 
@@ -195,11 +194,11 @@ module.exports = {
     // ============压缩图片 end============
 
     // ============注入cdn start============
-    config.plugin('html').tap((args) => {
-      // 生产环境或本地需要cdn时，才注入cdn
-      if (isProduction || devNeedCdn) args[0].cdn = cdn;
-      return args;
-    });
+    // config.plugin('html').tap((args) => {
+    //   // 生产环境或本地需要cdn时，才注入cdn
+    //   if (isProduction || devNeedCdn) args[0].cdn = cdn;
+    //   return args;
+    // });
     // ============注入cdn start============
     // 其他配置
   },

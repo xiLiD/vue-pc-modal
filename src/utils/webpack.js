@@ -3,7 +3,7 @@ module.exports = {
   // title: 'IOP产品维表',
   // package: 'product',
   page: 'index',
-  title: 'index',
+  title: '知识链路图',
   package: 'dist',
   LOGIN_KEY: '0', // 0 => 关闭单点登录 1 => 开启单点登录
   utilsConfig: {

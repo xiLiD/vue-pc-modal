@@ -1,9 +1,8 @@
 <template>
   <div>
-    <navbar ref="navbar"
-            @refreshPage="refreshPage" />
-    <app-main ref="appMain"
-              class='app-main' />
+    <!-- <navbar ref="navbar"
+            @refreshPage="refreshPage" /> -->
+    <app-main ref="appMain" />
   </div>
 </template>
 <script>
@@ -12,20 +11,12 @@ export default {
   name: "Layout",
   components: {
     Navbar,
-    AppMain
+    AppMain,
   },
   methods: {
-    refreshPage () {
+    refreshPage() {
       this.$refs.appMain.refresh();
-    }
-  }
+    },
+  },
 };
 </script>
-<style lang="less" scoped>
-.app-main {
-  // margin-top: 78px;
-  padding-top: 3rem;
-  display: flex;
-  justify-content: center;
-}
-</style>

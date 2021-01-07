@@ -6,7 +6,8 @@ import {
 } from "element-ui";
 // import commonConfig from '../config.js';
 const loadingTime = 500;
-const timeOut = 5000
+const timeOut = 200000;
+var _loading_ = window.$httpLoading;
 let httpRequest = axios.create()
 // axios.defaults.timeout = 5000;
 httpRequest.interceptors.request.use(
@@ -35,10 +36,12 @@ httpRequest.interceptors.response.use(
     // 状态码 200
     // debugger
     // console.log(123)
-    Vue.$httpLoading.close();
+    // Vue.$httpLoading.close();
+    _loading_.close();
     // 普通接口类型 => 成功
     // 根据后端不同返回值 进行逻辑判断
     if (res.status == 200 && res.data && res.data.code == '0') {
+      console.log(res.data.code)
       return Promise.resolve(res);
     } else if (res.status == 200 && res.data.type) {
       // 数据流类型  => 成功
@@ -49,7 +52,8 @@ httpRequest.interceptors.response.use(
     }
   },
   error => {
-    Vue.$httpLoading.close();
+    // Vue.$httpLoading.close();
+    _loading_.close();
     console.log("拦截器响应失败!", error);
     console.log(error.response);
     if (error && error.response) {
@@ -104,11 +108,10 @@ httpRequest.interceptors.response.use(
 );
 
 function checkLoading(config) {
-
+  config = config || {}
   let loading = config.showLoading || config.showLoading === undefined ?
     true :
     config.showLoading
-  console.log(loading)
   return loading
 
 }
@@ -120,17 +123,21 @@ function resolveData(showLoading, config, callBack) {
   return new Promise((resolve) => {
     if (showLoading) {
       let time = config.loadingTime || loadingTime;
-      Vue.$httpLoading.show();
+      console.log(time)
+      // window.httpLoading.show();
+      _loading_.show();
+      // Vue.$httpLoading.show();
       setTimeout(() => {
         resolve(config);
       }, time);
     } else {
-      Vue.$httpLoading.close();
+      _loading_.close();
+      // Vue.$httpLoading.close();
       resolve(config);
     }
   }).then(res => {
     // 执行回调
-    callBack(res)
+    return callBack(res)
   })
 }
 
@@ -147,7 +154,9 @@ function resolveData(showLoading, config, callBack) {
 // GET 请求
 export function requestGet(config) {
   let showLoading = checkLoading(config) // 判断是否需要加入 loading加载动画
+
   return resolveData(showLoading, config, (res) => {
+    console.log(res)
     return httpRequest.get(res.url, {
       params: res.data
     }, {
@@ -156,13 +165,36 @@ export function requestGet(config) {
   })
 }
 
+
+// GET 请求
+export function urlGetRequest(config) {
+  let showLoading = checkLoading(config) // 判断是否需要加入 loading加载动画 
+  let data = config.data;
+  for (var i in data) {
+    if (config.url.indexOf('?') === -1) {
+      config.url += '?' + i + '=' + data[i]
+    } else {
+      config.url += '&' + i + '=' + data[i]
+    }
+  }
+  return resolveData(showLoading, config, (res) => {
+    return httpRequest.get(res.url, {
+      timeout: config.timeOut || timeOut
+    });
+  })
+}
+
+
 // POST 请求
 export function requestPost(config) {
   let showLoading = checkLoading(config) // 判断是否需要加入 loading加载动画
-  let formData = config.data
+  let formData = config.data;
   return resolveData(showLoading, config, (res) => {
     return httpRequest.post(res.url, formData, {
-      timeout: config.timeOut || timeOut
+      timeout: config.timeOut || timeOut,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
     });
   })
 }

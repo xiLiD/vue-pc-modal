@@ -142,11 +142,30 @@ const element = {
         Vue.prototype.$prompt = MessageBox.prompt;
         Vue.prototype.$notify = Notification;
         Vue.prototype.$message = Message;
-        Vue.prototype.$httpLoading = {
+        // Vue.prototype.$httpLoading = {
+        //     show: function () {
+        //         Loading.service({
+        //             lock: true,
+        //             text: "数据加载需要几分钟，请耐心等待！",
+        //             spinner: "el-icon-loading",
+        //             background: "rgba(0, 0, 0, 0.7)"
+        //         });
+        //     },
+        //     close: function () {
+        //         let loadingInstance = Loading.service({
+        //             lock: true,
+        //             text: "数据加载需要几分钟，请耐心等待！",
+        //             spinner: "el-icon-loading",
+        //             background: "rgba(0, 0, 0, 0.7)"
+        //         });
+        //         loadingInstance.close();
+        //     }
+        // };
+        window.$httpLoading = {
             show: function () {
                 Loading.service({
                     lock: true,
-                    text: "加载中...",
+                    text: "数据加载需要几分钟，请耐心等待！",
                     spinner: "el-icon-loading",
                     background: "rgba(0, 0, 0, 0.7)"
                 });
@@ -154,7 +173,7 @@ const element = {
             close: function () {
                 let loadingInstance = Loading.service({
                     lock: true,
-                    text: "加载中...",
+                    text: "数据加载需要几分钟，请耐心等待！",
                     spinner: "el-icon-loading",
                     background: "rgba(0, 0, 0, 0.7)"
                 });
