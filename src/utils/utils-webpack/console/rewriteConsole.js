@@ -7,7 +7,7 @@ import webpackInfo from '@/utils/webpack'
     var num = 0
     for (var prop in console) {
         // console.log(prop)
-        if (removeItem.includes(prop)) {
+        if (removeItem.indexOf(prop) == -1) {
             console[prop] = (function (prop) {
                 return _console ? prop : function () { }
             }(console[prop]))

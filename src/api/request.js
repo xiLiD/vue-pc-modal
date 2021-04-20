@@ -1,6 +1,7 @@
 // import Vue from "@/main";
 import axios from "axios";
 import store from "../store";
+import "babel-polyfill"
 import {
   Message
 } from "element-ui";
@@ -34,19 +35,17 @@ httpRequest.interceptors.request.use(
 httpRequest.interceptors.response.use(
   res => {
     // 状态码 200
-    // debugger
-    // console.log(123)
-    // Vue.$httpLoading.close();
-    _loading_.close();
     // 普通接口类型 => 成功
     // 根据后端不同返回值 进行逻辑判断
     if (res.status == 200 && res.data && res.data.code == '0') {
-      console.log(res.data.code)
+      _loading_.close();
       return Promise.resolve(res);
     } else if (res.status == 200 && res.data.type) {
+      _loading_.close();
       // 数据流类型  => 成功
       return Promise.resolve(res);
     } else {
+      _loading_.close();
       // 普通接口类型  => 失败
       return Promise.reject(res);
     }
@@ -123,16 +122,12 @@ function resolveData(showLoading, config, callBack) {
   return new Promise((resolve) => {
     if (showLoading) {
       let time = config.loadingTime || loadingTime;
-      console.log(time)
-      // window.httpLoading.show();
       _loading_.show();
-      // Vue.$httpLoading.show();
       setTimeout(() => {
         resolve(config);
       }, time);
     } else {
       _loading_.close();
-      // Vue.$httpLoading.close();
       resolve(config);
     }
   }).then(res => {
@@ -154,9 +149,7 @@ function resolveData(showLoading, config, callBack) {
 // GET 请求
 export function requestGet(config) {
   let showLoading = checkLoading(config) // 判断是否需要加入 loading加载动画
-
   return resolveData(showLoading, config, (res) => {
-    console.log(res)
     return httpRequest.get(res.url, {
       params: res.data
     }, {
