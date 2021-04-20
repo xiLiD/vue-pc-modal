@@ -37,7 +37,7 @@ export default {
   /* overflow-y: scroll; */
   box-sizing: border-box;
   width: 100%;
-  padding: 30px 20px;
+  padding: 20px;
   box-shadow: 0 0 5px #999;
   border-radius: 5px;
   background-color: #fff;
@@ -65,5 +65,9 @@ export default {
   position: absolute;
   top: 10px;
   left: 0px;
+}
+.el-table--border,
+.el-table--group {
+  border: 1px solid #ebeef5 !important;
 }
 </style>

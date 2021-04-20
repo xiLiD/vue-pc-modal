@@ -1,34 +1,46 @@
 <template>
   <div class="turnContent box-start">
     <div class="leftMenu">
-      <div class="menuItem box-v-center Mt-16 bt1px"
-           :class="{ activeMenu: activeIndex === 1 }"
-           @click="goMenu(1)">
+      <div
+        class="menuItem box-v-center Mt-16 bt1px"
+        :class="{ activeMenu: activeIndex === 1 }"
+        @click="goMenu(1)"
+      >
         携转资格查询日通报
       </div>
-      <div class="menuItem box-v-center"
-           :class="{ activeMenu: activeIndex === 2 }"
-           @click="goMenu(2)">
+      <div
+        class="menuItem box-v-center"
+        :class="{ activeMenu: activeIndex === 2 }"
+        @click="goMenu(2)"
+      >
         携转资格查询月通报
       </div>
-      <div class="menuItem box-v-center"
-           :class="{ activeMenu: activeIndex === 3 }"
-           @click="goMenu(3)">
+      <div
+        class="menuItem box-v-center"
+        :class="{ activeMenu: activeIndex === 3 }"
+        @click="goMenu(3)"
+      >
         携入情况日通报
       </div>
-      <div class="menuItem box-v-center"
-           :class="{ activeMenu: activeIndex === 4 }"
-           @click="goMenu(4)">
+      <div
+        class="menuItem box-v-center"
+        :class="{ activeMenu: activeIndex === 4 }"
+        @click="goMenu(4)"
+      >
         携入情况月通报
       </div>
-      <div class="menuItem box-v-center"
-           :class="{ activeMenu: activeIndex === 5 }"
-           @click="goMenu(5)">
+      <div
+        class="menuItem box-v-center"
+        :class="{ activeMenu: activeIndex === 5 }"
+        @click="goMenu(5)"
+      >
         携转高危修复日通报
       </div>
-      <div class="menuItem box-v-center"
-           :class="{ activeMenu: activeIndex === 6 }"
-           @click="goMenu(6)">
+      <div
+        class="menuItem box-v-center"
+        :class="{ activeMenu: activeIndex === 6 }"
+        @click="goMenu(6)"
+      >
         携转高危修复月通报
       </div>
     </div>
@@ -55,23 +67,23 @@ import table6 from "@/components/table6";
 export default {
   name: "TurnNotification",
   components: { table1, table2, table3, table4, table5, table6 },
-  data () {
+  data() {
     return {
-      activeIndex: 1
+      activeIndex: 1,
     };
   },
   methods: {
-    goMenu (index) {
+    goMenu(index) {
       this.activeIndex = index;
-    }
+    },
   },
-  mounted () {
-    this.$httpLoading.show();
-    let self = this;
-    setTimeout(() => {
-      self.$httpLoading.close();
-    }, 1000);
-  }
+  mounted() {
+    // this.$httpLoading.show();
+    // let self = this;
+    // setTimeout(() => {
+    //   self.$httpLoading.close();
+    // }, 1000);
+  },
 };
 </script>
 

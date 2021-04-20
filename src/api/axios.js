@@ -1,4 +1,4 @@
-import { requestGet, requestPost, requestFile, requestExcel, urlGetRequest } from "./request";
+import { requestGet, requestPost, requestFile, requestExcel, urlGetRequest } from "@/api/request";
 import url from "./url";
 import base from "@/api/baseUrl";
 console.log(url)
@@ -47,11 +47,16 @@ const getGroup = function (params = {}) {
   params.url = url.getGroup;
   return requestPost(getParams(params));
 };
+const getReport = function (params = {}) {
+  params.url = url.getReport;
+  return requestPost(getParams(params));
+};
 
 export default {
   getNode,
   getGroup,
   getStatus,
   getNodeData,
-  getData
+  getData,
+  getReport
 };

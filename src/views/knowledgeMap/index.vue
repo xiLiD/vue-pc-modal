@@ -719,7 +719,37 @@ export default {
       // this.$refs.ruleForm.resetField();
     },
     outPut() {
-      this.$message("暂未开发");
+      // this.$message("暂未开发");
+      let arr = [];
+      this.productInfo.checkedCities.forEach((item) => {
+        arr.push(item.id);
+      });
+
+      let str = arr.join("|");
+      let params = {
+        groupId: this.formInline.custom,
+        areaId: this.formInline.city,
+        searchDate: this.formInline.datatime,
+        productId: str,
+        orderType: this.formInline.type == "1" ? "count" : "rate",
+      };
+      apiSend
+        .getReport({
+          data: params,
+          timeOut: 100000,
+        })
+        .then((res) => {
+          this.$message({
+            type: "sucess",
+            message: res.data.msg,
+          });
+        })
+        .catch((err) => {
+          this.$message({
+            type: "error",
+            message: err.data.msg,
+          });
+        });
     },
     findTable() {
       this.$message("暂未开发");
@@ -777,7 +807,7 @@ export default {
       // let str = this.formInline.type == "1" ? "推荐人数" : "领取率";
       let str = "领取率";
       list.map((item) => {
-        let number = item.number || 0;
+        let number = item.numberTwo || 0;
         let num = (number * 100).toFixed(2) + "%";
         // this.formInline.type == "1"
         //   ? number
@@ -803,9 +833,9 @@ export default {
         let order_num = 0,
           order_rate = 0;
         let numArr = array.sort((a, b) => b.count - a.count);
-        let rateArr = array.sort((a, b) => b.number - a.number);
+        let rateArr = array.sort((a, b) => b.numberTwo - a.numberTwo);
         order_num = numArr[0].count;
-        order_rate = rateArr[0].number;
+        order_rate = rateArr[0].numberTwo;
         if (nowArray.length == 0) {
           all.push({
             color: this.getColor(index),
@@ -817,7 +847,7 @@ export default {
         }
       });
       this.allList = all;
-      this.sortDown("number");
+      this.sortDown("numberTwo");
     },
     setDisabled(index) {
       let legalList = this.legalList;
@@ -939,6 +969,7 @@ export default {
       right: 10px;
       color: #000;
       font-size: 12px;
+      white-space: nowrap;
     }
   }
   .relation-ele {

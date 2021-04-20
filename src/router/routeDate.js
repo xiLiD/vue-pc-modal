@@ -1,8 +1,9 @@
 // import Layout from "@/views/layout/layout.vue";
 const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/knowledgeMap/index.vue')
-// const knowledgeMap = () => import('@/views/iframe/index.vue')
-const knowledgeMap = () => import('@/views/waterfall/index.vue')
+// const knowledgeMap = () => import('@/views/capital/capital.vue')
+// const knowledgeMap = () => import('@/components/upload/index.vue')
+const knowledgeMap = () => import('@/views/iop/crm/index.vue')
 export default {
   path: "/",
   component: Layout,

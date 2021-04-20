@@ -32,6 +32,12 @@ Vue.prototype.$timestampToTime = timestampToTime;
 Vue.prototype.$copy = function (value) {
     return JSON.parse(JSON.stringify(value));
 };
+// // wesocket  通信
+// import * as socketApi from '@/utils/socket'
+// Vue.prototype.socketApi = socketApi
+
+import scroll from 'vue-seamless-scroll'
+Vue.use(scroll)
 const vue = new Vue({
     router,
     store, // 在/store/index.js文件中暴露出的：new Vuex.Store出来的对象
