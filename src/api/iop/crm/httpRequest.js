@@ -1,7 +1,6 @@
 import { requestGet, requestPost, requestFile, requestExcel, urlGetRequest } from "@/api/request";
 import url from "./url";
 import base from "@/api/baseUrl";
-console.log(url)
 function getParams(params, name) {
     let baseUrl = process.env.NODE_ENV === "development" ? base.development : base.production;
     name = name ? name : "/iop2/monitoring/ActiveController";
@@ -55,7 +54,6 @@ const findTdCaCrmCampnConfigInfo = function (params = {}) {
     params.data = {
         r: new Date().getTime()
     }
-    console.log(params)
     return requestPost(getParams(params, '/iop2/monitoring'));
 };
 

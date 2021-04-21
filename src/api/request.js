@@ -1,7 +1,6 @@
 // import Vue from "@/main";
 import axios from "axios";
 import store from "../store";
-import "babel-polyfill"
 import {
   Message
 } from "element-ui";

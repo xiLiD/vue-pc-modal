@@ -1,5 +1,5 @@
 const path = require("path"); //引入path模块
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir); //path.join(__dirname)设置绝对路径
 }
 const webpackInfo = require('./src/utils/webpack')
@@ -7,12 +7,12 @@ const webpackInfo = require('./src/utils/webpack')
 module.exports = {
   // 基本路径
   publicPath: process.env.NODE_ENV === 'production'
-  ? './'
-  : '/',
+    ? './'
+    : '/',
   // 输出文件目录
   outputDir: webpackInfo.package,
   assetsDir: 'static',
-  indexPath : webpackInfo.page + '.html',
+  indexPath: webpackInfo.page + '.html',
   // eslint-loader 是否在保存的时候检查
   lintOnSave: true,
   // webpack配置
@@ -43,7 +43,7 @@ module.exports = {
     // 启用 CSS modules for all css / pre-processor files.
     modules: false
   },
-  
+
   // use thread-loader for babel & TS in production build
   // enabled by default if the machine has more than 1 cores
   parallel: require("os").cpus().length > 1,
@@ -57,8 +57,8 @@ module.exports = {
   devServer: {
     open: process.platform === "darwin",
     // host: "192.168.199.26",
-    host: "200.200.1.111",
-    port: 9090, 
+    host: "",
+    port: 9090,
     https: false,
     hotOnly: false,
     proxy: {
@@ -67,9 +67,9 @@ module.exports = {
         // target : 'http://192.168.199.35:9090',
         changeOrigin: true,
         pathRewrite: {
-          "^/iop_web_war": "" 
+          "^/iop_web_war": ""
         }
-      }  
+      }
     } // 设置代理 
     // before: app => {}
   },
@@ -77,7 +77,7 @@ module.exports = {
     // 其他配置
     config.entry('main').add('babel-polyfill') // main是入口js文件
     // 其他配置
-   },
+  },
   // 第三方插件配置
   pluginOptions: {
     // ...

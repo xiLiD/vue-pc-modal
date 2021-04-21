@@ -190,7 +190,7 @@ export default {
 </script>
 <style lang="less">
 .app-main {
-  padding: 20px 15px;
+  padding: 15px 20px;
 }
 .menu-right .menu-btn {
   display: flex !important;

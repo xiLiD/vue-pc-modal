@@ -31,9 +31,9 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-table :data="props.row.children" row-key="index">
-              <el-table-column label="客户群 ID" prop="tagId">
+              <el-table-column label="客户群 ID" prop="tagId" width="400">
               </el-table-column>
-              <el-table-column label="客户群名称">
+              <el-table-column label="客户群名称" width="400">
                 <template slot-scope="prop">
                   <a
                     @click="openLink"
@@ -43,7 +43,7 @@
                   >
                 </template>
               </el-table-column>
-              <el-table-column label="引用到期时间" prop="endDate">
+              <el-table-column label="引用到期时间" prop="endDate" width="300">
               </el-table-column>
             </el-table>
           </template>
@@ -149,6 +149,9 @@ export default {
 };
 </script>
 <style scoped>
+.app-main {
+  padding: 10vh 20px;
+}
 .page-content {
   width: 100%;
   padding: 20px 15px;
