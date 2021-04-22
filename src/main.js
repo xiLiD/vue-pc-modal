@@ -18,7 +18,7 @@ import "@/styles/reset.css"
 import "@/styles/common.css";
 import "@/styles/index.css";
 import VueLazyload from 'vue-lazyload'
-// import '@babel/polyfill'
+
 Vue.use(VueLazyload);
 Vue.use(element); // global css
 Vue.config.productionTip = false;
@@ -37,6 +37,7 @@ Vue.prototype.$copy = function (value) {
 // Vue.prototype.socketApi = socketApi
 
 import scroll from 'vue-seamless-scroll'
+import Clipboard from 'clipboard';
 Vue.use(scroll)
 const vue = new Vue({
     router,

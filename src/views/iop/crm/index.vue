@@ -7,7 +7,7 @@
         class="el-menu-vertical-demo"
         background-color="#545c64"
         text-color="#fff"
-        active-text-color="#ffd04b"
+        active-text-color="rgb(64,158,255)"
         @select="setMenuIndex"
       >
         <el-menu-item
@@ -27,13 +27,19 @@
         @expand-change="getExpand"
         :expand-row-keys="expands"
         row-key="codeKey"
+        :height="getHeight"
       >
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-table :data="props.row.children" row-key="index">
-              <el-table-column label="客户群 ID" prop="tagId" width="400">
+              <el-table-column
+                label="客户群 ID"
+                prop="tagId"
+                width="400"
+                align="center"
+              >
               </el-table-column>
-              <el-table-column label="客户群名称" width="400">
+              <el-table-column label="客户群名称" width="400" align="center">
                 <template slot-scope="prop">
                   <a
                     @click="openLink"
@@ -43,20 +49,23 @@
                   >
                 </template>
               </el-table-column>
-              <el-table-column label="引用到期时间" prop="endDate" width="300">
+              <el-table-column
+                label="引用到期时间"
+                prop="endDate"
+                width="300"
+                align="center"
+              >
               </el-table-column>
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column label="产品 ID" prop="campnProdCode">
+        <el-table-column label="产品 ID" prop="campnProdCode" align="center">
         </el-table-column>
-        <el-table-column label="产品名称" prop="campnProdName">
+        <el-table-column label="产品名称" prop="campnProdName" align="center">
         </el-table-column>
-        <el-table-column label="被引客户群数">
+        <el-table-column label="被引客户群数" align="center">
           <template slot-scope="props">
-            <span style="color: rgb(140, 197, 255); font-weight: bold">{{
-              props.row.counts
-            }}</span>
+            <span>{{ props.row.counts }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -75,6 +84,11 @@ export default {
       productData: [],
       expands: [],
     };
+  },
+  computed: {
+    getHeight() {
+      return window.innerHeight - 40 + "px";
+    },
   },
   mounted() {
     this.getMenu();

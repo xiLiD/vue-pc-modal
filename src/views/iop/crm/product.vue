@@ -43,26 +43,128 @@
         class="expand-box"
         :data="tableData"
         border
-        :header-cell-style="{ background: 'rgb(160,207,255)', color: '#fff' }"
+        :header-cell-style="{
+          background: 'rgb(102, 177, 255)',
+          color: '#fff',
+        }"
         style="width: 100%; margin-top: 20px"
       >
-        <el-table-column prop="pgId" width="150" label="活动ID" />
-        <el-table-column prop="pgName" width="400" label="活动名称" />
-        <el-table-column prop="startDate" width="220" label="开始时间" />
-        <el-table-column prop="endDate" width="220" label="结束时间" />
-        <el-table-column prop="listTitle" label="产品列表" />
-        <!-- <el-table-column label="产品列表">
+        <el-table-column
+          prop="pgId"
+          label="活动ID"
+          width="250px"
+          align="center"
+        />
+        <el-table-column label="活动名称" align="center">
+          <!-- <template slot-scope="props">
+            <input
+              :id="'input_' + props.row.pgId"
+              type="button"
+              name="copycontent"
+              @click="copyTitle(props.row)"
+              :title="props.row.pgName"
+              :value="props.row.pgName"
+              class="table-input"
+            />
+            
+          </template> -->
           <template slot-scope="scope">
-            <div class="show-title">
-              {{ getTitle(scope.row.lists) }}
+            <el-tooltip placement="top">
+              <div slot="content">点击复制</div>
+              <span
+                style="
+                  display: block;
+                  cursor: pointer;
+                  width: 100%;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                "
+                :class="'tag-read-' + scope.$index"
+                :data-clipboard-text="scope.row.pgId"
+                @click="copyTitle('tag-read-' + scope.$index)"
+                >{{ scope.row.pgName }}</span
+              >
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="startDate"
+          width="150px"
+          label="开始时间"
+          align="center"
+        />
+        <el-table-column
+          prop="endDate"
+          width="150px"
+          label="结束时间"
+          align="center"
+        />
+        <el-table-column label="产品列表" align="center">
+          <template slot-scope="props">
+            <div class="list-wrap">
+              <div class="list-title">
+                <span
+                  style="display: inline-block; width: 250px"
+                  v-if="props.row.pgId != momentId"
+                >
+                  {{ props.row.listTitle }}</span
+                >
+                <div
+                  :class="[
+                    'lists-data',
+                    { 'get-list': getFlex(props.row.lists) },
+                  ]"
+                  v-else
+                >
+                  <p
+                    class="list-title"
+                    v-for="(item, index) in props.row.lists"
+                    style="margin: 0 5px"
+                    :key="index"
+                  >
+                    {{ item.offerId }}:{{ item.offerName }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="show-info">
-              {{ getRows(scope.row.lists) }}
+            <div class="list-wrap"></div>
+          </template>
+        </el-table-column>
+        <el-table-column width="40px">
+          <template slot-scope="props">
+            <div
+              class="spread-box"
+              v-show="getShow(props.row.lists)"
+              style="cursor: pointer"
+              @click="clickMoment(props)"
+            >
+              <i
+                :class="[
+                  'el-icon-arrow-right spread-btn',
+                  { 'spread-item': props.row.pgId == momentId },
+                ]"
+              ></i>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="listTitle" label="产品列表" align="center" /> -->
+
+        <!-- <el-table-column type="expand">
+          <template slot-scope="props">
+            <div class="hidden-wrap">
+              <div
+                class="show-title"
+                v-for="(item, index) in props.row.lists"
+                :key="index"
+              >
+                {{ item.offerId }} ：{{ item.offerName }}
+              </div>
             </div>
           </template>
         </el-table-column> -->
 
-        <el-table-column type="expand">
+        <!-- <el-table-column type="expand">
           <template slot-scope="props">
             <div class="hidden-box">
               <div
@@ -74,7 +176,7 @@
               </div>
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background
@@ -93,6 +195,7 @@
 
 <script>
 import apiSend from "@/api/iop/crm/httpRequest";
+import Clipboard from "clipboard";
 export default {
   data() {
     return {
@@ -116,6 +219,7 @@ export default {
         data: {},
       },
       expands: [],
+      momentId: "",
     };
   },
   computed: {},
@@ -124,6 +228,38 @@ export default {
     // this.getSearch();
   },
   methods: {
+    copyTitle(refs) {
+      var clipboard = new Clipboard("." + refs);
+      clipboard.on("success", (e) => {
+        this.$message.success("复制成功!"); //这里你如果引入了elementui的提示就可以用，没有就注释即可
+        // 释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        this.$message.warning("该浏览器不支持自动复制!");
+        // 释放内存
+        clipboard.destroy();
+      });
+    },
+    getFlex(lists) {
+      console.log(lists);
+      return lists.length < 3;
+    },
+    getShow(lists) {
+      let str = lists.reduce((prev, cur, currentIndex) => {
+        let strings = currentIndex == lists.length - 1 ? "" : "、";
+        return prev + cur.offerId + ":" + cur.offerName + strings;
+      }, "");
+      return str.length > 10;
+    },
+    clickMoment(params) {
+      if (this.momentId === params.row.pgId) {
+        this.momentId = "";
+      } else {
+        this.momentId = params.row.pgId;
+      }
+    },
     onKeyUp: function () {
       var self = this;
       self.formInline.mobile = self.formInline.mobile.replace(/[^\d]/g, "");
@@ -131,25 +267,18 @@ export default {
     validatorData() {},
     getRows(list) {
       if (list.length > 0) {
-        console.log(list);
         return list.splice(3, list.length - 3);
       }
     },
     getTitle(list) {
       let str = "";
-      // let arr = list.splice(0, 3);
       let arrLen = list.length;
-      console.log(list);
       list.forEach((item, index) => {
         let strings = index == arrLen - 1 ? "" : "、";
         str += item.offerId + ":" + item.offerName + strings;
       });
-      str = str.length > 15 ? str.substr(0, 15) : str;
-      str += "..." + "等" + list.length + "个";
+      str = str.length > 25 ? str.substr(0, 25) + "..." : str;
       return str;
-    },
-    handleChange(val) {
-      console.log(val);
     },
     getChange(e) {
       this.queryData.pageSize = e;
@@ -174,12 +303,13 @@ export default {
           this.tableData = data;
           this.tableData.map((item) => {
             let obj = item;
+            item["startDate"] = item["startDate"].split(" ")[0];
+            item["endDate"] = item["endDate"].split(" ")[0];
             item["listTitle"] = this.getTitle(item.lists);
           });
           this.queryData.pageNo = res.data.data.current;
           this.queryData.pageSize = res.data.data.size;
           this.queryData.pageTotal = res.data.data.total;
-          // console.log(dataArr);
         })
         .catch((err) => {
           this.$message.error(err.data.msg);
@@ -269,5 +399,48 @@ export default {
   .el-table__expanded-cell {
     padding: 10px 50px;
   }
+  .list-wrap {
+    position: relative;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+  .lists-data {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.hidden-wrap {
+  float: right;
+  width: 18%;
+}
+.spread-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.spread-btn {
+  // position: absolute;
+  // right: 0px;
+  // top: 5px;
+  transition: 0.3s;
+  display: inline-block;
+}
+.spread-item {
+  transform: rotate(90deg);
+}
+.table-input {
+  width: 100%;
+  border: none;
+  background: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.table-input[type="text"]:focus {
+  border: none;
+}
+.get-list {
+  justify-content: center;
 }
 </style>
