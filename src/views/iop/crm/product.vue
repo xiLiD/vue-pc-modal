@@ -52,35 +52,20 @@
         <el-table-column
           prop="pgId"
           label="活动ID"
-          width="250px"
+          width="200px"
           align="center"
         />
         <el-table-column label="活动名称" align="center">
-          <!-- <template slot-scope="props">
-            <input
-              :id="'input_' + props.row.pgId"
-              type="button"
-              name="copycontent"
-              @click="copyTitle(props.row)"
-              :title="props.row.pgName"
-              :value="props.row.pgName"
-              class="table-input"
-            />
-            
-          </template> -->
           <template slot-scope="scope">
             <el-tooltip placement="top">
               <div slot="content">点击复制</div>
+
               <span
-                style="
-                  display: block;
-                  cursor: pointer;
-                  width: 100%;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                "
-                :class="'tag-read-' + scope.$index"
+                :class="[
+                  'tag-read-' + scope.$index,
+                  'p-name',
+                  { 'get-hidden': scope.row.pgId != momentId },
+                ]"
                 :data-clipboard-text="scope.row.pgId"
                 @click="copyTitle('tag-read-' + scope.$index)"
                 >{{ scope.row.pgName }}</span
@@ -88,6 +73,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
+
         <el-table-column
           prop="startDate"
           width="150px"
@@ -251,7 +237,7 @@ export default {
         let strings = currentIndex == lists.length - 1 ? "" : "、";
         return prev + cur.offerId + ":" + cur.offerName + strings;
       }, "");
-      return str.length > 10;
+      return str.length > 18;
     },
     clickMoment(params) {
       if (this.momentId === params.row.pgId) {
@@ -265,11 +251,6 @@ export default {
       self.formInline.mobile = self.formInline.mobile.replace(/[^\d]/g, "");
     },
     validatorData() {},
-    getRows(list) {
-      if (list.length > 0) {
-        return list.splice(3, list.length - 3);
-      }
-    },
     getTitle(list) {
       let str = "";
       let arrLen = list.length;
@@ -277,7 +258,7 @@ export default {
         let strings = index == arrLen - 1 ? "" : "、";
         str += item.offerId + ":" + item.offerName + strings;
       });
-      str = str.length > 25 ? str.substr(0, 25) + "..." : str;
+      str = str.length > 18 ? str.substr(0, 18) + "..." : str;
       return str;
     },
     getChange(e) {
@@ -306,6 +287,10 @@ export default {
             item["startDate"] = item["startDate"].split(" ")[0];
             item["endDate"] = item["endDate"].split(" ")[0];
             item["listTitle"] = this.getTitle(item.lists);
+            item["nameTitle"] =
+              item.pgName.length > 10
+                ? item.pgName.substr(0, 10) + "..."
+                : item.pageName;
           });
           this.queryData.pageNo = res.data.data.current;
           this.queryData.pageSize = res.data.data.size;
@@ -442,5 +427,15 @@ export default {
 }
 .get-list {
   justify-content: center;
+}
+.p-name {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+.get-hidden {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

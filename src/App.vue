@@ -10,7 +10,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -69,5 +69,13 @@ export default {
 .el-table--border,
 .el-table--group {
   border: 1px solid #ebeef5 !important;
+}
+
+.el-table th.gutter {
+  display: table-cell !important;
+}
+
+.el-table colgroup.gutter {
+  display: table-cell !important;
 }
 </style>

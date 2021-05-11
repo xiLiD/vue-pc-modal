@@ -2,9 +2,10 @@
 const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/knowledgeMap/index.vue')
 // const knowledgeMap = () => import('@/views/iop/activity/index.vue')
-// const knowledgeMap = () => import('@/views/iop/audit/index.vue')
-const knowledgeMap = () => import('@/views/iop/crm/product.vue')
-console.log(knowledgeMap)
+// const knowledgeMap = () => import('@/views/control/index.vue')
+// const knowledgeMap = () => import('@/views/network/components/answer/answer.vue')
+const knowledgeMap = () => import('@/views/network/index.vue')
+// console.log(knowledgeMap)
 export default {
   path: "/",
   component: Layout,

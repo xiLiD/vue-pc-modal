@@ -37,7 +37,7 @@ Vue.prototype.$copy = function (value) {
 // Vue.prototype.socketApi = socketApi
 
 import scroll from 'vue-seamless-scroll'
-import Clipboard from 'clipboard';
+
 Vue.use(scroll)
 const vue = new Vue({
     router,
