@@ -1,5 +1,5 @@
 <template>
-  <iphone class="wow fadeInLeft2" data-wow-delay="0.5s">
+  <div class="iphone wow fadeInLeft2" data-wow-delay="0.5s">
     <div class="btn01 wow fadeInLeft2" data-wow-delay="1.5s"></div>
     <div class="btn02 wow fadeInLeft2" data-wow-delay="1.7s"></div>
     <div class="btn03 wow fadeInLeft2" data-wow-delay="1.9s"></div>
@@ -66,7 +66,7 @@
         <!-- contact code end -->
       </div>
     </div>
-  </iphone>
+  </div>
 </template>
 <script>
 // import "@/views/network/components/resource/js/time.js";
@@ -165,17 +165,12 @@ export default {
       getTime: "",
     };
   },
-  created() {
-    console.log(this.lists);
-  },
   mounted() {
-    console.log(this.naireList);
     this.naireList.map((item) => {
       let obj = item;
       obj["select"] = "";
       return obj;
     });
-    // console.log(this.naireList);
     this.setTime();
   },
   methods: {

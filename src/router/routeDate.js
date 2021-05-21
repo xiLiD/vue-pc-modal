@@ -4,7 +4,8 @@ const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/iop/activity/index.vue')
 // const knowledgeMap = () => import('@/views/control/index.vue')
 // const knowledgeMap = () => import('@/views/network/components/answer/answer.vue')
-const knowledgeMap = () => import('@/views/network/index.vue')
+// const knowledgeMap = () => import('@/views/controlers/announcement/index.vue')
+const knowledgeMap = () => import('@/views/capital/index.vue')
 // console.log(knowledgeMap)
 export default {
   path: "/",

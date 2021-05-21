@@ -26,7 +26,7 @@
           <el-carousel
             indicator-position="none"
             class="el-carouse1-box"
-            :height="'300px'"
+            :height="getCarouseHeight + 'px'"
             :interval="5000"
             arrow="never"
             :ref="'interfaceCarousel'"
@@ -41,12 +41,17 @@
               <div
                 :id="'mainleft' + interIndex"
                 class="main-right"
-                :style="[{ width: '800px', height: '230px' }]"
+                :style="[
+                  {
+                    width: colonyWidth + 'px',
+                    height: getCarouseHeight + 'px',
+                  },
+                ]"
               ></div>
             </el-carousel-item>
           </el-carousel>
         </div>
-        <div class="amiddboxttop" style="margin-top: 10px">
+        <div class="amiddboxttop">
           <h2 class="tith2 pt1">集群可用性</h2>
           <ul class="line">
             <li
@@ -63,7 +68,7 @@
           <el-carousel
             indicator-position="none"
             class="el-carouse1-box"
-            height="230px"
+            :height="getCarouseHeight + 'px'"
             :interval="5000"
             arrow="never"
             ref="colonyCarousel"
@@ -76,7 +81,12 @@
             >
               <div
                 class="amiddboxttop_map"
-                style="width: 800px; height: 230px"
+                :style="[
+                  {
+                    width: colonyWidth + 'px',
+                    height: getCarouseHeight + 'px',
+                  },
+                ]"
                 :id="'colony' + index"
               ></div>
             </el-carousel-item>
@@ -150,7 +160,12 @@
               <div
                 :id="'mainright' + carouselIndex + '_' + index"
                 class="main-right"
-                :style="[{ width: '600px', height: getHeight(carouselIndex) }]"
+                :style="[
+                  {
+                    width: getCarouseWidth + 'px',
+                    height: getHeight(carouselIndex),
+                  },
+                ]"
               ></div>
             </el-carousel-item>
           </el-carousel>
@@ -194,6 +209,7 @@
               :data="listData"
               :class-option="optionSingleHeightTime"
               class="seamless-warp"
+              :style="{ height: getSingleHeight + 'px' }"
             >
               <ul class="item">
                 <li v-for="(item, index) in listData" :key="index">
@@ -904,6 +920,24 @@ export default {
     };
   },
   computed: {
+    getSingleHeight() {
+      let height = window.innerHeight * 0.3;
+      height -= height % 27;
+      return height;
+    },
+    earlyWidth() {
+      return window.innerHeight * 0.42 * 0.62;
+    },
+    getCarouseHeight() {
+      return window.innerHeight * 0.3;
+    },
+    getCarouseWidth() {
+      return window.innerWidth * 0.45;
+    },
+    colonyWidth() {
+      // console.log(document.queryElementByClassName("amiddboxttop"));
+      return window.innerWidth * 0.48;
+    },
     swiper() {
       if (this.isPreview && this.json.isAnimation == "true") {
         return this.$refs.NSwiper.swiper;
@@ -1289,7 +1323,7 @@ ul.line {
   height: auto;
 }
 .app-container {
-  padding: 0px 10px 15px;
+  padding: 0px 10px 0 10px;
   box-sizing: border-box;
   .app-title {
     position: relative;

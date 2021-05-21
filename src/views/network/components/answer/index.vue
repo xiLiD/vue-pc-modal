@@ -128,23 +128,17 @@ export default {
       showMobile: false,
     };
   },
-  created() {
-    console.log(this.lists);
-  },
   mounted() {
-    console.log(this.naireList);
     this.naireList.map((item) => {
       let obj = item;
       obj["select"] = "";
       return obj;
     });
-    console.log(this.naireList);
     // this.setTime();
   },
   methods: {
     setMobile(bool) {
       this.showMobile = bool;
-      console.log();
     },
   },
 };

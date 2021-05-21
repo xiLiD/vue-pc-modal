@@ -2,6 +2,7 @@ import {
     Pagination,
     Dialog,
     Autocomplete,
+    Avatar,
     Dropdown,
     DropdownMenu,
     DropdownItem,
@@ -70,6 +71,7 @@ import {
 import "element-ui/lib/theme-chalk/index.css";
 const element = {
     install: function (Vue) {
+        Vue.use(Avatar);
         Vue.use(Pagination);
         Vue.use(Dialog);
         Vue.use(Autocomplete);

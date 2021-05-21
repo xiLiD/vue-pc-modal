@@ -1,5 +1,5 @@
 <template>
-  <iphone class="wow fadeInLeft2" data-wow-delay="0.5s">
+  <div class="iphone wow fadeInLeft2" data-wow-delay="0.5s">
     <div class="btn01 wow fadeInLeft2" data-wow-delay="1.5s"></div>
     <div class="btn02 wow fadeInLeft2" data-wow-delay="1.7s"></div>
     <div class="btn03 wow fadeInLeft2" data-wow-delay="1.9s"></div>
@@ -120,7 +120,7 @@
         </div>
       </div>
     </div>
-  </iphone>
+  </div>
 </template>
 
 
@@ -190,18 +190,13 @@ export default {
       getTime: "",
     };
   },
-  created() {
-    console.log(this.lists);
-  },
   mounted() {
-    // console.log(this.naireList);
     this.setTime();
   },
   methods: {
     handleScroll() {
       const scrollTop = this.$refs.scrollMsg.scrollTop;
       this.$refs.scrollMsg.scrollTop += 100;
-      console.log(this.$refs.scrollMsg.scrollTop);
     },
     sendMessage() {
       // let txt = this.msgText;
@@ -224,24 +219,19 @@ export default {
           notice: "own",
         }
       );
-      console.log(
-        new Date().getHours() + ":" + new Date().getMinutes > 10
-          ? new Date().getMinutes()
-          : "0" + new Date().getMinutes()
-      );
+
       // const scrollTop = this.$refs.scrollMsg.scrollTop;
-      // console.log(this.$refs.scrollMsg.scrollTop);
       // this.$refs.scrollMsg.scrollTop(this.$refs.scrollMsg.scrollTo + 100);
-      // console.log(this.$refs.scrollMsg.scrollTop);
+
+      // 清空输入框
+      this.msgText = "";
       this.noticeList.push(msgObj);
 
       this.$nextTick(() => {
         this.$refs.scrollMsg.scrollTop += 100;
-        console.log(this.$refs.scrollMsg.scrollTop);
       });
     },
     setContract(bool) {
-      console.log(bool);
       this.showContact = bool;
     },
     setTime() {
@@ -385,6 +375,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: center;
+    padding: 10px 0;
   }
   /deep/ .el-input__inner {
     width: 200px;
