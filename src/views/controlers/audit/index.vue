@@ -1,7 +1,12 @@
 <template>
   <div class="notice-page">
     <div class="form-notice">
-      <el-button type="primary" icon="el-icon-plus" size="mini" plain
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        plain
+        @click="toPages"
         >新增公告</el-button
       >
     </div>
@@ -54,12 +59,12 @@
         :height="getHeight"
         border
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="公告名称" prop="city" align="center" />
-        <el-table-column label="公告内容" prop="cnty" align="center" />
-        <el-table-column label="生效时间" prop="grid" align="center" />
-        <el-table-column label="失效时间" prop="order" align="center" />
-        <el-table-column label="创建用户" prop="population" align="center" />
+        <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
+        <el-table-column label="活动编码" prop="city" align="center" />
+        <el-table-column label="活动名称" prop="cnty" align="center" />
+        <el-table-column label="当前审批人" prop="grid" align="center" />
+        <el-table-column label="申请人" prop="order" align="center" />
+        <el-table-column label="申请时间" prop="population" align="center" />
         <el-table-column label="状态" prop="popuNum1" align="center" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -110,6 +115,7 @@ export default {
     this.getTable();
   },
   methods: {
+    toPages() {},
     getTable() {
       let data = [
         {

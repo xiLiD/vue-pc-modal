@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import NavBar from "./components/navbar";
+import NavBar from "./components/tabs-pane";
 export default {
   data() {
     return {};

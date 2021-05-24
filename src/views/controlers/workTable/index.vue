@@ -19,9 +19,14 @@
               <label class="label-num">(3)</label>
             </div>
             <div class="dynamic-desc">
-              <el-tag type="warning"
-                ><p>即时滚动的公告通知，即时滚动的公告通知</p></el-tag
-              >
+              <el-carousel height="20px" direction="vertical" :autoplay="true">
+                <el-carousel-item
+                  v-for="(item, index) in noticeList"
+                  :key="index"
+                >
+                  <p>{{ item }}</p>
+                </el-carousel-item>
+              </el-carousel>
             </div>
           </div>
           <div class="line-tag">
@@ -37,6 +42,8 @@
               v-for="(item, index) in topMenu"
               :key="index"
               :class="topIndex == index ? 'active-line' : ''"
+              @click="checkTopMenu"
+              :data-menuindex="index"
             >
               {{ item }}
             </li>
@@ -77,6 +84,8 @@
               v-for="(item, index) in bottomMenu"
               :key="index"
               :class="bottomIndex == index ? 'active-line' : ''"
+              @click="checkBottomMenu"
+              :data-menuindex="index"
             >
               {{ item }}
             </li>
@@ -262,6 +271,11 @@ export default {
       suggestion: "",
       rankList: [],
       tableData: [],
+      noticeList: [
+        "即时滚动的公告通知",
+        "即时滚动的公告通知",
+        "即时滚动的公告通知",
+      ],
     };
   },
   computed: {
@@ -272,7 +286,7 @@ export default {
       );
     },
     getRankHeight() {
-      return window.innerHeight - 137 - 306 - 30 - 20 - 10 - 12 + "px";
+      return window.innerHeight - 137 - 306 - 30 - 10 - 12 + "px";
     },
   },
   mounted() {
@@ -280,6 +294,16 @@ export default {
     this.getRank();
   },
   methods: {
+    checkBottomMenu(e) {
+      let currentIndex = e.currentTarget.getAttribute("data-menuindex");
+      if (this.bottomIndex == currentIndex) return;
+      this.bottomIndex = currentIndex;
+    },
+    checkTopMenu(e) {
+      let currentIndex = e.currentTarget.getAttribute("data-menuindex");
+      if (this.topIndex == currentIndex) return;
+      this.topIndex = currentIndex;
+    },
     getRank() {
       let data = [
         {
@@ -363,6 +387,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@import "../resource/style/common.less";
 .control-wrapper {
   background-color: rgb(242, 242, 242);
   width: 100%;
@@ -387,8 +412,8 @@ export default {
         align-items: center;
         font-size: 18px;
         label {
-          margin-left: 30px;
-          letter-spacing: 1px;
+          margin-left: 45px;
+          letter-spacing: 2px;
         }
       }
       .notice-desc {
@@ -407,7 +432,13 @@ export default {
         }
         .dynamic-desc {
           margin-top: 10px;
-          font-size: 14px;
+          font-size: 12px;
+          width: 200px;
+          padding: 5px 10px;
+          border-radius: 2px;
+          background-color: rgb(250, 236, 216);
+          line-height: 20px;
+          letter-spacing: 0.5px;
         }
       }
     }
@@ -499,7 +530,7 @@ export default {
     }
     .speedy-nav {
       .nav-desc {
-        padding: 10px 0;
+        padding-top: 10px;
         border-top: 1px solid #ddd;
         margin-top: 10px;
         ul {
@@ -512,18 +543,17 @@ export default {
             font-size: 12px;
             border-radius: 3px;
             max-width: 100px;
-            margin-top: 10px;
-            &:nth-child(1),
-            &:nth-child(2),
-            &:nth-child(3),
-            &:nth-child(4) {
-              margin-top: 0;
-            }
-            &:nth-child(1) {
+            // margin-top: 10px;
+            // &:nth-child(1),
+            // &:nth-child(2),
+            // &:nth-child(3) {
+            //   margin-top: 0;
+            // }
+            &:nth-child(5n + 1) {
               margin-left: 0;
             }
-            &:nth-child(4n + 1) {
-              margin-left: 0;
+            &:nth-child(n + 6) {
+              margin-top: 10px;
             }
           }
         }
@@ -571,32 +601,6 @@ export default {
     background-color: #fff;
     border-radius: 3px;
     padding: 10px;
-  }
-
-  /deep/ .el-table {
-    margin-top: 10px;
-    .warning-row {
-      background-color: rgb(242, 245, 252);
-    }
-    thead {
-      th {
-        background-color: rgb(242, 245, 252);
-        color: #999;
-        font-weight: 500;
-        padding: 5px 0;
-        font-size: 12px;
-        // letter-spacing: 1px;
-      }
-    }
-    tbody {
-      td {
-        font-size: 12px;
-        padding: 5px 0;
-      }
-      tr:hover > td {
-        background-color: rgb(140, 197, 255) !important;
-      }
-    }
   }
 }
 </style>
