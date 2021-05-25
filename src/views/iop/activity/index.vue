@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container common-css">
+  <div class="common-css">
     <div class="page-main">
       <div class="page-menu">
         <el-form
@@ -14,7 +14,7 @@
                 v-model="formInline.search"
                 placeholder="活动编码或名称"
                 clearable
-                size="small"
+                size="mini"
               >
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
@@ -22,14 +22,14 @@
             <el-button
               type="primary"
               @click="findTable"
-              size="small"
+              size="mini"
               icon="el-icon-search"
               >搜索</el-button
             >
-            <el-button type="info" size="small" icon="el-icon-refresh" plain
+            <el-button type="info" size="mini" icon="el-icon-refresh" plain
               >重置</el-button
             >
-            <el-button type="primary" size="small" icon="el-icon-arrow-down"
+            <el-button type="primary" size="mini" icon="el-icon-arrow-down"
               >高级搜索
             </el-button>
           </div>
@@ -43,7 +43,7 @@
           <div class="menu-left group-input">
             <el-form-item label="活动类型" label-width="80px">
               <el-select
-                size="small"
+                size="mini"
                 v-model="formInline.type"
                 placeholder="请选择"
               >
@@ -57,7 +57,7 @@
             </el-form-item>
             <el-form-item label="状态" label-width="80px">
               <el-select
-                size="small"
+                size="mini"
                 v-model="formInline.status"
                 placeholder="请选择"
               >
@@ -71,7 +71,7 @@
             </el-form-item>
             <el-form-item label="归属区域" label-width="80px">
               <el-select
-                size="small"
+                size="mini"
                 v-model="formInline.area"
                 placeholder="请选择"
               >
@@ -90,7 +90,7 @@
                 v-model="formInline.startTime"
                 type="date"
                 placeholder="选择日期"
-                size="small"
+                size="mini"
               >
               </el-date-picker>
             </el-form-item>
@@ -99,7 +99,7 @@
                 v-model="formInline.endTime"
                 type="date"
                 placeholder="选择日期"
-                size="small"
+                size="mini"
               >
               </el-date-picker>
             </el-form-item>
@@ -108,263 +108,159 @@
                 v-model="formInline.creater"
                 placeholder="请选择"
                 clearable
-                size="small"
+                size="mini"
                 disabled
-                ><template>
-                  <div class="page-container common-css">
-                    <div class="page-main">
-                      <div class="page-menu">
-                        <el-form
-                          :inline="true"
-                          :model="formInline"
-                          class="demo-form-inline"
-                          size="small"
-                        >
-                          <div class="menu-left">
-                            <el-form-item>
-                              <el-input
-                                v-model="formInline.search"
-                                placeholder="请输入查询关键字"
-                              ></el-input>
-                            </el-form-item>
-                            <el-form-item label="查询类别">
-                              <el-select
-                                v-model="formInline.region"
-                                placeholder="查询类别"
-                              >
-                                <el-option
-                                  :label="item.name"
-                                  :value="item.value"
-                                  v-for="(item, index) in menuOptions"
-                                  :key="index"
-                                ></el-option>
-                              </el-select>
-                            </el-form-item>
-                            <el-form-item>
-                              <el-button
-                                type="primary"
-                                @click="findTable"
-                                size="small"
-                                >查询</el-button
-                              >
-                            </el-form-item>
-                          </div>
-                        </el-form>
-                      </div>
-                      <el-table
-                        :data="tableData"
-                        border
-                        :header-cell-style="{
-                          background: 'rgb(160,207,255)',
-                          color: '#fff',
-                        }"
-                        :span-method="objectSpanMethod"
-                        style="width: 100%; margin-top: 20px"
-                        @selection-change="handleSelectionChange"
-                      >
-                        <el-table-column type="selection" width="55">
-                        </el-table-column>
-                        <el-table-column prop="prodcode" label="字段一" />
-                        <el-table-column prop="prodname" label="字段二" />
-                        <el-table-column prop="chnnlcode" label="字段三" />
-                        <el-table-column prop="chnnlname" label="字段四" />
-                        <el-table-column prop="categorycode" label="字段五" />
-                        <el-table-column prop="categoryname" label="字段六" />
-                        <el-table-column prop="calcode" label="字段七" />
-                        <el-table-column prop="proddesc" label="产品描述">
-                          <template slot-scope="proddesc">
-                            <el-button> </el-button>
-                          </template>
-                        </el-table-column>
-                      </el-table>
-                      <el-pagination
-                        :current-page.sync="queryData.pageNo"
-                        :page-size="queryData.pageSize"
-                        :total="queryData.total"
-                        style="margin-top: 20px; text-align: center"
-                        :page-sizes="[10, 20, 30, 50, 70, 100]"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                      />
-                    </div>
-                    <el-dialog
-                      title="导入框"
-                      :visible.sync="dialogTableVisible"
-                      class="export-dialog"
-                    >
-                      <div class="dialog-top">
-                        <div class="dialog-left">
-                          <el-upload
-                            class="upload-demo"
-                            action="#"
-                            ref="upload"
-                            :limit="1"
-                            :http-request="httpRequest"
-                          >
-                            <el-button
-                              type="warning"
-                              icon="el-icon-upload"
-                              size="small"
-                              >选择文件</el-button
-                            >
-                          </el-upload>
-                          <el-button
-                            type="primary"
-                            size="small"
-                            @click.native="importTable"
-                            :disabled="!checkPass"
-                            >确定</el-button
-                          >
-                        </div>
-                        <div class="dialog-right">
-                          <el-button
-                            type="success"
-                            icon="el-icon-download"
-                            size="small"
-                            @click.native="downloadExcel"
-                            >模板下载</el-button
-                          >
-                        </div>
-                      </div>
-                      <div class="dialog-info">
-                        <div v-for="(item, index) in notice" :key="index">
-                          {{ item }}
-                        </div>
-                      </div>
-                    </el-dialog>
-
-                    <el-dialog
-                      :title="modalInfo.title"
-                      :visible.sync="modalInfo.show"
-                      class="export-dialog"
-                      @close="closeDialog"
-                    >
-                      <el-form
-                        :model="ruleForm"
-                        :rules="rules"
-                        label-width="120px"
-                        size="small"
-                        ref="ruleForm"
-                        class="demo-ruleForm"
-                      >
-                        <el-form-item
-                          class="menu-btn"
-                          label="产品编码"
-                          prop="prodcode"
-                        >
-                          <el-input
-                            v-model="ruleForm.prodcode"
-                            placeholder="请输入产品编码"
-                            :disabled="modalInfo.title == '修改框'"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="产品名称"
-                          prop="prodname"
-                        >
-                          <el-input
-                            v-model="ruleForm.prodname"
-                            placeholder="请输入产品名称"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="一级类别编码"
-                          prop="chnnlcode"
-                        >
-                          <el-input
-                            v-model="ruleForm.chnnlcode"
-                            placeholder="请输入一级类别编码"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="一级类别名称"
-                          prop="chnnlname"
-                        >
-                          <el-input
-                            v-model="ruleForm.chnnlname"
-                            placeholder="请输入一级类别名称"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="二级类别编码"
-                          prop="categorycode"
-                        >
-                          <el-input
-                            v-model="ruleForm.categorycode"
-                            placeholder="请输入二级类别编码"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="二级类别名称"
-                          prop="categoryname"
-                        >
-                          <el-input
-                            v-model="ruleForm.categoryname"
-                            placeholder="请输入二级类别名称"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="产品描述"
-                          prop="proddesc"
-                        >
-                          <el-input
-                            v-model="ruleForm.proddesc"
-                            placeholder="请输入产品描述"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="统计口径1"
-                          prop="calcode"
-                        >
-                          <el-input
-                            v-model="ruleForm.calcode"
-                            placeholder="请输入统计口径"
-                            :disabled="modalInfo.title == '修改框'"
-                          ></el-input>
-                        </el-form-item>
-                        <el-form-item
-                          class="menu-btn"
-                          label="统计口径2"
-                          prop="calcode2"
-                        >
-                          <el-input
-                            v-model="ruleForm.calcode2"
-                            placeholder="请输入统计口径"
-                            :disabled="modalInfo.title == '修改框'"
-                          ></el-input>
-                        </el-form-item>
-                      </el-form>
-                      <div class="btn-group">
-                        <el-button
-                          type="primary"
-                          size="small"
-                          @click="submitForm('ruleForm')"
-                          >确定</el-button
-                        >
-                        <el-button
-                          type="primary"
-                          size="small"
-                          @click="modalInfo.show = false"
-                          >取消</el-button
-                        >
-                      </div>
-                    </el-dialog>
-                  </div>
-                </template></el-input
-              ></el-form-item
+              ></el-input
+            ></el-form-item>
+          </div>
+          <div class="menu-left">
+            <el-form-item
+              label="渠道"
+              label-width="80px"
+              @click.native="getSelet"
+              data-type="渠道"
             >
-          </div></el-form
-        >
+              <el-input
+                v-model="formInline.cannel"
+                placeholder="请选择"
+                clearable
+                size="mini"
+                disabled
+              >
+                <template slot="append">选择</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label="运营位"
+              label-width="80px"
+              @click.native="getSelet"
+              data-type="运营位"
+            >
+              <el-input
+                v-model="formInline.motion"
+                placeholder="请选择"
+                clearable
+                size="mini"
+                disabled
+              >
+                <template slot="append">选择</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label="销售品"
+              label-width="80px"
+              @click.native="getSelet"
+              data-type="销售品"
+            >
+              <el-input
+                v-model="formInline.sale"
+                placeholder="请选择"
+                clearable
+                size="mini"
+                disabled
+              >
+                <template slot="append">选择</template>
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label="事件"
+              label-width="80px"
+              @click.native="getSelet"
+              data-type="事件"
+            >
+              <el-input
+                v-model="formInline.events"
+                placeholder="请选择"
+                clearable
+                size="mini"
+                disabled
+              >
+                <template slot="append">选择</template>
+              </el-input>
+            </el-form-item>
+          </div>
+        </el-form>
       </div>
+      <div class="search-header">
+        <div class="header-title">活动列表</div>
+        <div class="header-operate">
+          <el-form :inline="true" class="demo-form-inline">
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-plus" size="mini"
+                >新增</el-button
+              >
+            </el-form-item>
+            <el-form-item>
+              <el-button type="warning" icon="el-icon-download" size="mini"
+                >导入</el-button
+              >
+            </el-form-item>
+            <el-form-item>
+              <el-button type="success" icon="el-icon-upload2" size="mini"
+                >导出</el-button
+              >
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <el-table
+        :data="tableData"
+        border
+        :height="getHeight"
+        :header-cll-style="{ background: 'rgb(160,207,255)', color: '#fff' }"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column label="名称">
+          <template slot-scope="prop">
+            <a @click="openLink" :data-link="prop.row.link" target="_blank">{{
+              prop.row.name
+            }}</a>
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="活动类型" />
+        <el-table-column prop="level" label="优先级" />
+        <el-table-column prop="startTime" label="开始日期" />
+        <el-table-column prop="endTime" label="结束日期" />
+        <el-table-column prop="updateTime" label="修改日期" />
+        <el-table-column prop="creater" label="创建人" />
+        <el-table-column prop="status" label="状态" />
+        <el-table-column prop="area" label="归属区域" />
+        <el-table-column prop="iopType" label="IOP类型" />
+        <el-table-column label="操作" class="btn-operate">
+          <template>
+            <!-- <i class="icon-operate">
+              <img src="./images/edit.png" title="编辑" fit="contain" />
+            </i>
+            <i class="icon-operate">
+              <img src="./images/publish.png" title="发布" fit="contain" />
+            </i>
+            <i class="icon-operate">
+              <img src="./images/delete.png" title="删除" fit="contain" />
+            </i>
+            <i class="icon-operate">
+              <img src="./images/spread.png" title="展开" fit="contain" />
+            </i> -->
+            <i class="el-icon-edit-outline" title="编辑"></i>
+            <i class="el-icon-s-promotion" title="发布"></i>
+            <i class="el-icon-delete" title="删除"></i>
+            <i class="el-icon-rank" title="展开"></i>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page.sync="queryData.pageNo"
+        :page-size="queryData.pageSize"
+        :total="queryData.total"
+        style="margin-top: 20px; text-align: center"
+        :page-sizes="[10, 20, 30, 50, 70, 100]"
+        layout="total, sizes, prev, pager, next, jumper"
+      />
     </div>
+    <active-components
+      ref="activeComponens"
+      :dialogInfo="dialogInfo"
+      @selectClick="selectOptions"
+    ></active-components>
   </div>
 </template>
 
@@ -726,214 +622,8 @@ export default {
   },
 };
 </script>
-<style lang="less">
-.app-main {
-  padding: 20px 15px;
-}
-.menu-right .menu-btn {
-  display: flex !important;
-}
-.page-container {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 30px 20px;
-  box-shadow: 0 0 5px #999;
-  border-radius: 5px;
-  background-color: #fff;
-  .menu-right .upload-demo {
-    display: inline-block;
-    margin: 10px;
-  }
-}
-.export-dialog {
-  .dialog-top {
-    display: flex;
-    justify-content: space-between;
-    .dialog-left {
-      display: flex;
-      .upload-demo {
-        margin-right: 10px;
-        position: relative;
-        .el-upload-list {
-          position: absolute;
-          top: 30px;
-          left: 0;
-        }
-      }
-    }
-  }
-  .dialog-info {
-    margin-top: 50px;
-    min-height: 300px;
-    border: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    line-height: 1.5;
-  }
-  .btn-group {
-    text-align: right;
-  }
-}
-.el-message .el-message-box__wrapper {
-  z-index: 99999;
-}
-</style>
-              </el-input>
-            </el-form-item>
-          </div>
-          <div class="menu-left">
-            <el-form-item
-              label="渠道"
-              label-width="80px"
-              @click.native="getSelet"
-              data-type="渠道"
-            >
-              <el-input
-                v-model="formInline.cannel"
-                placeholder="请选择"
-                clearable
-                size="small"
-                disabled
-              >
-                <template slot="append">选择</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item
-              label="运营位"
-              label-width="80px"
-              @click.native="getSelet"
-              data-type="运营位"
-            >
-              <el-input
-                v-model="formInline.motion"
-                placeholder="请选择"
-                clearable
-                size="small"
-                disabled
-              >
-                <template slot="append">选择</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item
-              label="销售品"
-              label-width="80px"
-              @click.native="getSelet"
-              data-type="销售品"
-            >
-              <el-input
-                v-model="formInline.sale"
-                placeholder="请选择"
-                clearable
-                size="small"
-                disabled
-              >
-                <template slot="append">选择</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item
-              label="事件"
-              label-width="80px"
-              @click.native="getSelet"
-              data-type="事件"
-            >
-              <el-input
-                v-model="formInline.events"
-                placeholder="请选择"
-                clearable
-                size="small"
-                disabled
-              >
-                <template slot="append">选择</template>
-              </el-input>
-            </el-form-item>
-          </div>
-        </el-form>
-      </div>
-      <div class="search-header">
-        <div class="header-title">活动列表</div>
-        <div class="header-operate">
-          <el-form :inline="true" class="demo-form-inline">
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-plus" size="small"
-                >新增</el-button
-              >
-            </el-form-item>
-            <el-form-item>
-              <el-button type="warning" icon="el-icon-download" size="small"
-                >导入</el-button
-              >
-            </el-form-item>
-            <el-form-item>
-              <el-button type="success" icon="el-icon-upload2" size="small"
-                >导出</el-button
-              >
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-      <el-table
-        :data="tableData"
-        border
-        :height="getHeight"
-        :header-cll-style="{ background: 'rgb(160,207,255)', color: '#fff' }"
-      >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="名称">
-          <template slot-scope="prop">
-            <a @click="openLink" :data-link="prop.row.link" target="_blank">{{
-              prop.row.name
-            }}</a>
-          </template>
-        </el-table-column>
-        <el-table-column prop="type" label="活动类型" />
-        <el-table-column prop="level" label="优先级" />
-        <el-table-column prop="startTime" label="开始日期" />
-        <el-table-column prop="endTime" label="结束日期" />
-        <el-table-column prop="updateTime" label="修改日期" />
-        <el-table-column prop="creater" label="创建人" />
-        <el-table-column prop="status" label="状态" />
-        <el-table-column prop="area" label="归属区域" />
-        <el-table-column prop="iopType" label="IOP类型" />
-        <el-table-column label="操作" class="btn-operate">
-          <template>
-            <!-- <i class="icon-operate">
-              <img src="./images/edit.png" title="编辑" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/publish.png" title="发布" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/delete.png" title="删除" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/spread.png" title="展开" fit="contain" />
-            </i> -->
-            <i class="el-icon-edit-outline" title="编辑"></i>
-            <i class="el-icon-s-promotion" title="发布"></i>
-            <i class="el-icon-delete" title="删除"></i>
-            <i class="el-icon-rank" title="展开"></i>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :current-page.sync="queryData.pageNo"
-        :page-size="queryData.pageSize"
-        :total="queryData.total"
-        style="margin-top: 20px; text-align: center"
-        :page-sizes="[10, 20, 30, 50, 70, 100]"
-        layout="total, sizes, prev, pager, next, jumper"
-      />
-    </div>
-    <active-components
-      ref="activeComponens"
-      :dialogInfo="dialogInfo"
-      @selectClick="selectOptions"
-    ></active-components>
-  </div>
-</template>
+
+
 
 <script>
 import apiSend from "@/api/axios.js";
@@ -1172,8 +862,55 @@ export default {
 };
 </script>
 <style lang="less">
-.app-main {
-  padding: 20px 15px;
+.menu-right .menu-btn {
+  display: flex !important;
+}
+.page-container {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 30px 20px;
+  box-shadow: 0 0 5px #999;
+  border-radius: 5px;
+  background-color: #fff;
+  .menu-right .upload-demo {
+    display: inline-block;
+    margin: 10px;
+  }
+}
+.export-dialog {
+  .dialog-top {
+    display: flex;
+    justify-content: space-between;
+    .dialog-left {
+      display: flex;
+      .upload-demo {
+        margin-right: 10px;
+        position: relative;
+        .el-upload-list {
+          position: absolute;
+          top: 30px;
+          left: 0;
+        }
+      }
+    }
+  }
+  .dialog-info {
+    margin-top: 50px;
+    min-height: 300px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .btn-group {
+    text-align: right;
+  }
+}
+.el-message .el-message-box__wrapper {
+  z-index: 99999;
 }
 .menu-right .menu-btn {
   display: flex !important;
