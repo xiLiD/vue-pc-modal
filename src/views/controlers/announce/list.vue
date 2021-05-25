@@ -1,20 +1,25 @@
 <template>
   <div class="notice-page">
     <div class="form-notice">
-      <el-button type="primary" icon="el-icon-plus" size="mini" plain
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        plain
+        @click="toPages"
         >新增公告</el-button
       >
     </div>
     <div class="form-search">
       <el-form :inline="true">
-        <el-form-item label="公告名称">
+        <el-form-item label="活动名称">
           <el-input
             v-model="searchInline.name"
             size="mini"
             placeholder="请输入名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="创建用户">
+        <el-form-item label="申请人">
           <el-input
             v-model="searchInline.user"
             size="mini"
@@ -32,13 +37,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="生效时间">
+        <el-form-item label="申请时间">
           <el-date-picker
             v-model="searchInline.time"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            type="date"
+            placeholder="选择日期"
             size="mini"
           >
           </el-date-picker>
@@ -57,11 +60,11 @@
         border
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="公告名称" prop="city" align="center" />
-        <el-table-column label="公告内容" prop="cnty" align="center" />
-        <el-table-column label="生效时间" prop="grid" align="center" />
-        <el-table-column label="失效时间" prop="order" align="center" />
-        <el-table-column label="创建用户" prop="population" align="center" />
+        <el-table-column label="活动编码" prop="city" align="center" />
+        <el-table-column label="活动名称" prop="cnty" align="center" />
+        <el-table-column label="当前审批人" prop="grid" align="center" />
+        <el-table-column label="申请人" prop="order" align="center" />
+        <el-table-column label="申请时间" prop="population" align="center" />
         <el-table-column label="状态" prop="popuNum1" align="center" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -112,6 +115,7 @@ export default {
     this.getTable();
   },
   methods: {
+    toPages() {},
     getTable() {
       let data = [
         {

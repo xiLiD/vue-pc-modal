@@ -1,25 +1,5 @@
 <template id="administration">
   <div class="page-wrapper" style="padding: 10px">
-    <!-- <el-form :inline="true" :model="formInline" class="form-inline-item">
-      <el-form-item label="快捷键名称">
-        <el-input
-          v-model="formInline.user"
-          placeholder="请输入名称"
-          size="mini"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model="formInline.region" placeholder="请选择" size="mini">
-          <el-option label="状态一" value="shanghai" size="mini"></el-option>
-          <el-option label="状态二" value="beijing" size="mini"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button class="buttons" type="primary" @click="onSubmit" size="mini">
-          查询
-        </el-button>
-      </el-form-item>
-    </el-form> -->
     <el-form :inline="true">
       <el-form-item label="快捷键名称">
         <el-input

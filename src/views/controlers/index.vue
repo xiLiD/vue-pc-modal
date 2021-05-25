@@ -8,10 +8,10 @@
       class="tabs"
     >
       <el-tab-pane
-        v-for="(item, index) in editableTabs"
+        v-for="item in editableTabs"
         :label="item.title"
         :key="item.name"
-        :closable="item.route != 'administration'"
+        :closable="item.route != 'workTable'"
         :name="item.name"
       >
       </el-tab-pane>
@@ -26,120 +26,43 @@
   </div>
 </template>
 <script>
+import routesTarget from "./resource/json/routes.json";
 export default {
   data() {
     return {
       editableTabsValue: "1",
-      editableTabs: [
-        {
-          title: "我的工作台",
-          name: "1",
-          route: "workTable",
-          redirect: "http://www.baidu.com",
-        },
-        {
-          title: "帮助",
-          name: "2",
-          route: "help",
-          redirect: "",
-        },
-        {
-          title: "百度",
-          name: "3",
-          route: "iframe",
-          redirect: "http://www.baidu.com",
-        },
-      ],
+      // editableTabs: [],
       tabIndex: 1,
       bindUrl: "",
       closeable: true,
-      routerList: [
-        {
-          title: "我的工作台",
-          name: "1",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多公告",
-          name: "2",
-          route: "annountcement",
-          redirect: "",
-        },
-        {
-          title: "新增公告",
-          name: "3",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多待办",
-          name: "4",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多待办",
-          name: "5",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多申请",
-          name: "6",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多预警",
-          name: "7",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "更多快捷功能导航",
-          name: "8",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "快捷键管理",
-          name: "9",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "帮助中心",
-          name: "10",
-          route: "workTable",
-          redirect: "",
-        },
-        {
-          title: "评论中心",
-          name: "11",
-          route: "workTable",
-          redirect: "",
-        },
-      ],
     };
   },
+  computed: {
+    editableTabs: {
+      get() {
+        return this.$store.state.workRoutes;
+      },
+      set(v) {
+        this.$store.commit("setRoutes", v);
+      },
+    },
+  },
   watch: {
-    $route(to, from) {
-      console.log(to);
-      console.log(this.tabIndex);
-      if (to.name == "iframe") {
-        this.$router.push({
-          path: to.path,
-          query: {
-            src: to.params.src,
-          },
-        });
-      }
+    editableTabs: {
+      immediate: true,
+      handler(value) {
+        console.log(value);
+        let arr = window.location.href.split("/");
+        let str = arr[arr.length - 1];
+        let current = this.editableTabs.filter((item) => item.route == str);
+        if (current.length > 0) {
+          this.editableTabsValue = current[0].name;
+        }
+      },
     },
   },
   methods: {
     tabClick(e) {
-      console.log(e);
       let eArr = this.editableTabs.filter((item) => item.name == e.name);
       this.$router.push({
         name: eArr[0].route,
@@ -147,7 +70,6 @@ export default {
           src: eArr[0].redirect,
         },
       });
-      console.log(eArr[0].redirect);
     },
     addTab(targetName) {
       let newTabName = ++this.tabIndex + "";
@@ -161,24 +83,26 @@ export default {
     removeTab(targetName) {
       let tabs = this.editableTabs;
       let activeName = this.editableTabsValue;
+      let routeTarget = null;
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
             let nextTab = tabs[index + 1] || tabs[index - 1];
             if (nextTab) {
               activeName = nextTab.name;
+              routeTarget = nextTab;
             }
           }
         });
       }
-      console.log(tabs);
+      console.log(routeTarget);
       this.editableTabsValue = activeName;
       this.editableTabs = tabs.filter((tab) => tab.name !== targetName);
-      let eArr = tabs.filter((tab) => tab.name == targetName);
+      this.$store.commit("setRoutes", this.editableTabs);
       this.$router.push({
-        name: eArr[0].route,
+        name: routeTarget.route,
         params: {
-          src: eArr[0].redirect,
+          src: routeTarget.redirect,
         },
       });
     },
@@ -199,18 +123,24 @@ export default {
     }
   }
 }
+.el-tabs__header {
+  margin-bottom: 0;
+}
 .iframe-wrapper {
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
 
   .iframe-container {
-    padding: 20px 30px;
+    // padding: 15px 10px;
+    box-sizing: border-box;
     box-shadow: 0 0 5px #999;
     background-color: #fff;
     width: 100%;
     border-radius: 5px;
     box-sizing: border-box;
+    height: calc(100vh - 61px);
+    overflow-y: scroll;
   }
   iframe {
     width: 100%;

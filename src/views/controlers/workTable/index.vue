@@ -45,12 +45,20 @@
               @click="checkTopMenu"
               :data-menuindex="index"
             >
-              {{ item }}
+              {{ item.title }}
             </li>
           </ul>
         </div>
         <div class="ct-table">
-          <div class="table-title">待审批活动 <label>(3)</label></div>
+          <div class="table-title">
+            <div>
+              {{ getTopTitle }} <label>({{ getTopNum }})</label>
+            </div>
+            <div class="more" @click="getTopMore">
+              更多
+              <i class="el-icon-d-arrow-right"></i>
+            </div>
+          </div>
           <div class="table-content">
             <el-table
               :data="tableData"
@@ -87,7 +95,7 @@
               @click="checkBottomMenu"
               :data-menuindex="index"
             >
-              {{ item }}
+              {{ item.title }}
             </li>
           </ul>
         </div>
@@ -102,6 +110,10 @@
                 {{ item["value"] }} <label>{{ item["num"] }}</label>
               </li>
             </ul>
+            <div class="more">
+              更多
+              <i class="el-icon-d-arrow-right"></i>
+            </div>
           </div>
           <div class="table-content">
             <el-table
@@ -134,7 +146,9 @@
       <div class="speedy-nav shadow-bk">
         <div class="nav-top">
           <div class="nav-title">快捷功能导航</div>
-          <div class="nav-settle">设置</div>
+          <div class="nav-settle" @click="toPage" data-route="navagation">
+            设置
+          </div>
         </div>
         <div class="nav-desc">
           <ul>
@@ -148,7 +162,7 @@
         <div class="helper">
           <div class="nav-top">
             <div class="nav-title">帮助中心</div>
-            <div class="nav-settle">进入</div>
+            <div class="nav-settle" @click="toPage" data-route="help">进入</div>
           </div>
           <div class="help-desc">
             <ul>
@@ -160,8 +174,10 @@
         </div>
         <div class="writer-area">
           <div class="nav-top">
-            <div class="nav-title">帮助中心</div>
-            <div class="nav-settle">评论中心</div>
+            <div class="nav-title">我要留言</div>
+            <div class="nav-settle" @click="toPage" data-route="comment">
+              评论中心
+            </div>
           </div>
           <div class="writer-desc">
             <el-input
@@ -202,13 +218,43 @@
   </div>
 </template>
 <script>
+import routesTarget from "../resource/json/routes.json";
 export default {
   data() {
     return {
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      topMenu: ["我的待办", "我的申请", "我的预警"],
-      bottomMenu: ["我的活动", "我的客群", "我的画像"],
+      topMenu: [
+        {
+          title: "我的待办",
+          desc: "待审批活动列表",
+          num: 10,
+        },
+        {
+          title: "我的申请",
+          desc: "我的活动申请列表",
+          num: 12,
+        },
+        {
+          title: "我的预警",
+          desc: "我的监控指标预警列表",
+          num: 13,
+        },
+      ],
+      bottomMenu: [
+        {
+          title: "我的活动",
+          num: 15,
+        },
+        {
+          title: "我的客群",
+          num: 9,
+        },
+        {
+          title: "我的画像",
+          num: 5,
+        },
+      ],
       topIndex: 0,
       bottomIndex: 0,
       bottomList: [
@@ -281,12 +327,30 @@ export default {
   computed: {
     getHeight() {
       return (
-        (window.innerHeight - 115 - 30 - 30 - 10 - 33 - 30 - 30 - 20 - 5) / 2 +
+        (window.innerHeight -
+          115 -
+          30 -
+          30 -
+          10 -
+          33 -
+          30 -
+          30 -
+          20 -
+          5 -
+          41 -
+          30) /
+          2 +
         "px"
       );
     },
     getRankHeight() {
-      return window.innerHeight - 137 - 306 - 30 - 10 - 12 + "px";
+      return window.innerHeight - 137 - 306 - 30 - 10 - 12 - 41 - 30 + "px";
+    },
+    getTopTitle() {
+      return this.topMenu[this.topIndex].desc;
+    },
+    getTopNum() {
+      return this.topMenu[this.topIndex].num;
     },
   },
   mounted() {
@@ -294,6 +358,51 @@ export default {
     this.getRank();
   },
   methods: {
+    getTopMore() {
+      let route;
+      let topIndex = Number(this.topIndex);
+      switch (topIndex) {
+        case 0:
+          // 待办
+          route = "auditList";
+          break;
+        case 1:
+          // 活动
+          route = "activity";
+          break;
+        case 2:
+          // 预警
+          route = "warnList";
+          break;
+      }
+      console.log(route);
+      this.updateRoutes(route);
+    },
+    toPage(e) {
+      let route = e.currentTarget.getAttribute("data-route");
+      this.updateRoutes(route);
+    },
+    updateRoutes(route) {
+      if (this.$store.state.workRoutes.some((item) => item.route == route)) {
+        this.$router.replace({
+          name: route,
+        });
+        return;
+      }
+      let currentRoute = routesTarget.routes.filter(
+        (item) => item.route == route
+      );
+      console.log(currentRoute);
+      let arr = this.$store.state.workRoutes.concat(currentRoute);
+      let newRoutes = Array.from(new Set(arr));
+
+      console.log(newRoutes);
+      this.$store.commit("setRoutes", newRoutes);
+      // console.log(route);
+      this.$router.replace({
+        name: route,
+      });
+    },
     checkBottomMenu(e) {
       let currentIndex = e.currentTarget.getAttribute("data-menuindex");
       if (this.bottomIndex == currentIndex) return;
@@ -393,6 +502,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+
   .wrapper-left {
     width: 65%;
     .wrapper-title {
@@ -483,6 +593,13 @@ export default {
         .table-title {
           padding: 0 10px;
           margin-top: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .more {
+            font-size: 12px;
+            cursor: pointer;
+          }
         }
       }
     }

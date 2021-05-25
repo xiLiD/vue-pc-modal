@@ -1,25 +1,25 @@
 <template>
   <div class="notice-page">
     <div class="form-notice">
-      <div class="page-title">待审批活动列表</div>
+      <div class="page-title">我的监控指标预警列表</div>
     </div>
     <div class="form-search">
       <el-form :inline="true">
-        <el-form-item label="活动名称">
+        <el-form-item label="预警名称">
           <el-input
             v-model="searchInline.name"
             size="mini"
             placeholder="请输入名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="申请人">
+        <el-form-item label="监控指标">
           <el-input
             v-model="searchInline.user"
             size="mini"
-            placeholder="请输入名称"
+            placeholder="请输入指标"
           ></el-input>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="预警等级">
           <el-select v-model="searchInline.status" size="mini">
             <el-option
               v-for="item in statusList"
@@ -30,7 +30,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="申请时间">
+        <el-form-item label="预警周期">
           <el-date-picker
             v-model="searchInline.time"
             type="date"
@@ -45,7 +45,13 @@
         </el-form-item>
       </el-form>
       <!-- <el-button type="danger" size="mini">批量删除</el-button> -->
-      <el-table :data="tableData" style="width: 100%" row-key="codeKey" border>
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        row-key="codeKey"
+        :height="getHeight"
+        border
+      >
         <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
         <el-table-column label="活动编码" prop="city" align="center" />
         <el-table-column label="活动名称" prop="cnty" align="center" />
@@ -154,9 +160,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../resource/style/common.less";
 .notice-page {
   width: 100%;
+  // padding: 15px 10px;
   /deep/ .el-table {
     margin-top: 10px;
     .warning-row {
