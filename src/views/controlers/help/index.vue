@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column prop="renewtime" label="更新时间"> </el-table-column>
       <el-table-column prop="operation" label="操作" width="220">
-        <i class="el-icon-download"></i>
+        <i class="el-icon-download" stlye="cursor:pointer"></i>
       </el-table-column>
     </el-table>
 

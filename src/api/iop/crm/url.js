@@ -5,4 +5,3 @@ export default {
     findTdCaCrmCampnConfigProdInfo: '/CrmProdController/findTdCaCrmCampnConfigProdInfo', // 查询产品id，产品名称，引用客户群数量
     // findActiveOfferOffInfo: '/findActiveOfferActInfo' //  测试   
 };
-    

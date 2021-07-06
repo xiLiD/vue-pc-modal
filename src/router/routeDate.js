@@ -2,17 +2,24 @@
 const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/knowledgeMap/index.vue')
 // const knowledgeMap = () => import('@/views/iop/activity/index.vue')
-// const knowledgeMap = () => import('@/views/control/index.vue')
+const knowledgeMap = () => import('@/views/control/index.vue')
+// const knowledgeMap = () => import('@/views/platform/index.vue');
 // const knowledgeMap = () => import('@/views/network/components/answer/answer.vue')
 // const knowledgeMap = () => import('@/views/controlers/announcement/index.vue')
-const knowledgeMap = () => import('@/views/controlers/index.vue')
+// const knowledgeMap = () => import('@/views/controlers/index.vue')
 // console.log(knowledgeMap)
 export default {
   path: "/",
   component: Layout,
-  redirect: "/moreMenu/workTable",
+  redirect: '/index',
+  // redirect: "/moreMenu/workTable",
   name: "main",
   children: [
+    {
+      path: "index",
+      name: "index",
+      component: knowledgeMap,
+    },
     // {
     //   path: "worker",
     //   name: "worker",
@@ -71,6 +78,12 @@ export default {
           path: 'activity',
           name: 'activity',
           component: resolve => import('@/views/controlers/activity/index.vue')
+        },
+        // 评论
+        {
+          path: 'comment',
+          name: 'comment',
+          component: resolve => import('@/views/controlers/comment/index.vue')
         },
         // 预警列表
         {

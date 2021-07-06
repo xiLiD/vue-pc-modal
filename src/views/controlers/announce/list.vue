@@ -6,7 +6,7 @@
         icon="el-icon-plus"
         size="mini"
         plain
-        @click="toPages"
+        @click="showAdd"
         >新增公告</el-button
       >
     </div>
@@ -52,13 +52,7 @@
         </el-form-item>
       </el-form>
       <el-button type="danger" size="mini">批量删除</el-button>
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        row-key="codeKey"
-        :height="getHeight"
-        border
-      >
+      <el-table :data="tableData" style="width: 100%" row-key="codeKey" border>
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="活动编码" prop="city" align="center" />
         <el-table-column label="活动名称" prop="cnty" align="center" />
@@ -85,10 +79,15 @@
       >
       </el-pagination>
     </div>
+    <announce-add ref="announce-add"></announce-add>
   </div>
 </template>
 <script>
+import announceAdd from "./add.vue";
 export default {
+  components: {
+    announceAdd,
+  },
   data() {
     return {
       searchInline: {
@@ -115,7 +114,9 @@ export default {
     this.getTable();
   },
   methods: {
-    toPages() {},
+    showAdd() {
+      this.$refs["announce-add"].setVisible(true);
+    },
     getTable() {
       let data = [
         {

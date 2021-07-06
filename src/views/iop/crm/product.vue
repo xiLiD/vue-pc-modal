@@ -404,9 +404,6 @@ export default {
   align-items: center;
 }
 .spread-btn {
-  // position: absolute;
-  // right: 0px;
-  // top: 5px;
   transition: 0.3s;
   display: inline-block;
 }

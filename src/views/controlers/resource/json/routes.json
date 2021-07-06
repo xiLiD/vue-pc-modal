@@ -57,8 +57,14 @@
         {
             "title": "评论中心",
             "name": "11",
-            "route": "workTable",
+            "route": "comment",
             "redirect": ""
+        },
+        {
+            "title": "百度",
+            "name": "12",
+            "route": "iframe",
+            "redirect": "http://www.baidu.com"
         }
     ]
 }

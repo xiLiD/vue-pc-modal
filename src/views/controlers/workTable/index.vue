@@ -15,7 +15,12 @@
           </div>
           <div class="notice-desc">
             <div class="notice-title">
-              <label class="label-title">公告栏</label>
+              <label
+                class="label-title"
+                @click="toPage"
+                data-route="announceList"
+                >公告栏</label
+              >
               <label class="label-num">(3)</label>
             </div>
             <div class="dynamic-desc">
@@ -30,8 +35,10 @@
             </div>
           </div>
           <div class="line-tag">
-            <p>待办<label>(3)</label></p>
-            <p>预警<label>(10)</label></p>
+            <p><label @click="topMore(0)">待办</label><label>(3)</label></p>
+            <p>
+              <label @click="topMore(1)">我的申请</label><label>(10)</label>
+            </p>
           </div>
         </div>
       </div>
@@ -64,7 +71,6 @@
               :data="tableData"
               style="width: 100%"
               row-key="codeKey"
-              :height="getHeight"
               border
             >
               <el-table-column label="活动编码" prop="city" align="center" />
@@ -103,14 +109,20 @@
           <div class="table-title">
             <ul>
               <li
-                v-for="(item, index) in bottomList"
+                @click="checkMenu(index)"
+                v-for="(item, index) in bottomMenu[bottomIndex].menu"
                 :key="index"
                 :class="bottomActive == index ? 'active-line' : ''"
               >
                 {{ item["value"] }} <label>{{ item["num"] }}</label>
               </li>
             </ul>
-            <div class="more">
+            <div
+              class="more"
+              @click="toFrame"
+              :data-url="bottomMenu[bottomIndex].link"
+              :data-title="bottomMenu[bottomIndex].title"
+            >
               更多
               <i class="el-icon-d-arrow-right"></i>
             </div>
@@ -120,7 +132,6 @@
               :data="tableData"
               style="width: 100%"
               row-key="codeKey"
-              :height="getHeight"
               border
             >
               <el-table-column label="活动编码" prop="city" align="center" />
@@ -152,8 +163,15 @@
         </div>
         <div class="nav-desc">
           <ul>
-            <li v-for="(item, index) in navMenu" :key="index">
-              <label>{{ item["value"] }}</label>
+            <li
+              v-for="(item, index) in navMenu"
+              :key="index"
+              @click="toFrame"
+              :data-url="item.url"
+              :data-title="item.title"
+            >
+              {{ item["title"] }}
+              <!-- <el-button type="primary" size="mini" plain></el-button> -->
             </li>
           </ul>
         </div>
@@ -162,7 +180,14 @@
         <div class="helper">
           <div class="nav-top">
             <div class="nav-title">帮助中心</div>
-            <div class="nav-settle" @click="toPage" data-route="help">进入</div>
+            <div
+              class="nav-settle"
+              @click="toFrame"
+              data-url="/iop2/monitoring/interaction/interaction.html#/"
+              data-title="帮助中心"
+            >
+              进入
+            </div>
           </div>
           <div class="help-desc">
             <ul>
@@ -175,9 +200,9 @@
         <div class="writer-area">
           <div class="nav-top">
             <div class="nav-title">我要留言</div>
-            <div class="nav-settle" @click="toPage" data-route="comment">
+            <!-- <div class="nav-settle" @click="toPage" data-route="comment">
               评论中心
-            </div>
+            </div> -->
           </div>
           <div class="writer-desc">
             <el-input
@@ -201,7 +226,6 @@
             :data="rankList"
             style="width: 100%"
             row-key="codeKey"
-            :height="getRankHeight"
             border
           >
             <el-table-column label="标签名称" prop="label" align="center" />
@@ -227,16 +251,19 @@ export default {
       topMenu: [
         {
           title: "我的待办",
+          name: "auditList",
           desc: "待审批活动列表",
           num: 10,
         },
         {
           title: "我的申请",
+          name: "activity",
           desc: "我的活动申请列表",
           num: 12,
         },
         {
           title: "我的预警",
+          name: "warnList",
           desc: "我的监控指标预警列表",
           num: 13,
         },
@@ -244,15 +271,83 @@ export default {
       bottomMenu: [
         {
           title: "我的活动",
+          link: "/pcm/manage/index.html#/activitvs/main-layouti",
+          // link: "https://www.baidu.com/",
           num: 15,
+          menu: [
+            {
+              key: "all",
+              value: "活动总数",
+              num: 300,
+            },
+            {
+              key: "excute",
+              value: "执行中",
+              num: 150,
+            },
+            {
+              key: "stop",
+              value: "暂停",
+              num: 50,
+            },
+            {
+              key: "finish",
+              value: "完成",
+              num: 100,
+            },
+          ],
         },
         {
           title: "我的客群",
-          num: 9,
+          link: "/ckm/ckm-index.html#/segment/",
+          menu: [
+            {
+              key: "all",
+              value: "活动总数",
+              num: 120,
+            },
+            {
+              key: "excute",
+              value: "执行中",
+              num: 30,
+            },
+            {
+              key: "stop",
+              value: "暂停",
+              num: 0,
+            },
+            {
+              key: "finish",
+              value: "完成",
+              num: 90,
+            },
+          ],
         },
         {
           title: "我的画像",
-          num: 5,
+          link: "/ckm/ckm-index.html#/profileconfig/",
+          menu: [
+            {
+              key: "all",
+              value: "活动总数",
+              num: 200,
+            },
+            {
+              key: "excute",
+              value: "执行中",
+              num: 15,
+            },
+            {
+              key: "stop",
+              value: "暂停",
+              num: 10,
+            },
+            {
+              key: "finish",
+              value: "完成",
+              num: 175,
+            },
+          ],
         },
       ],
       topIndex: 0,
@@ -283,27 +378,23 @@ export default {
       navMenu: [
         {
           key: 1,
-          value: "创建活动",
+          title: "创建活动",
+          url: "/pcm/manage/index.html#/activitvs/main-layouti",
         },
         {
           key: 2,
-          value: "创建客群",
+          title: "创建客群",
+          url: "/ckm/ckm-index.html#/segment/",
         },
         {
           key: 3,
-          value: "创建画像",
-        },
-        {
-          key: 4,
-          value: "创建场景",
-        },
-        {
-          key: 5,
-          value: "创建标签",
+          title: "创建画像",
+          url: "/ckm/ckm-index.html#/profileconfig/",
         },
         {
           key: 6,
-          value: "投诉用户导入",
+          title: "投诉用户导入",
+          url: "/iop2/IOPComplain.html",
         },
       ],
       helperList: [
@@ -338,13 +429,16 @@ export default {
           20 -
           5 -
           41 -
+          30 -
           30) /
           2 +
         "px"
       );
     },
     getRankHeight() {
-      return window.innerHeight - 137 - 306 - 30 - 10 - 12 - 41 - 30 + "px";
+      return (
+        window.innerHeight - 137 - 306 - 30 - 10 - 12 - 41 - 30 - 30 + "px"
+      );
     },
     getTopTitle() {
       return this.topMenu[this.topIndex].desc;
@@ -358,50 +452,96 @@ export default {
     this.getRank();
   },
   methods: {
+    checkMenu(index) {
+      this.bottomActive = index;
+    },
+    topMore(index) {
+      let route = this.topMenu[index].name;
+      this.updateRoutes(route, {
+        t: "strict",
+      });
+    },
     getTopMore() {
       let route;
-      let topIndex = Number(this.topIndex);
-      switch (topIndex) {
-        case 0:
-          // 待办
-          route = "auditList";
-          break;
-        case 1:
-          // 活动
-          route = "activity";
-          break;
-        case 2:
-          // 预警
-          route = "warnList";
-          break;
-      }
-      console.log(route);
+      route = this.topMenu[this.topIndex].name;
       this.updateRoutes(route);
+    },
+    toFrame(e) {
+      let frame = e.target.getAttribute("data-url");
+      let title = e.target.getAttribute("data-title");
+      frame =
+        window.location.host.indexOf("localhost") != -1
+          ? "https://10.154.144.169:9008" + frame
+          : window.location.origin + frame;
+      console.log(frame);
+      if (this.$store.state.workRoutes.some((item) => item.title == title)) {
+        let tabs = this.$store.state.workRoutes.filter(
+          (item) => item.title == title
+        )[0].name;
+        this.$store.commit("setTabs", tabs);
+        // this.$router.push({
+        //   path: "/moreMenu/iframe",
+        //   query: {
+        //     src: frame,
+        //   },
+        // });
+        return;
+      }
+      let oldRoutes = this.$store.state.workRoutes;
+      let max = oldRoutes[0].name;
+      oldRoutes.forEach(
+        (item) => (max = item.name > Number(max) ? item.name : max)
+      );
+      max = max < 30 ? "99" : max;
+      max++; // max++;
+      let newRoutes = oldRoutes.concat([
+        {
+          title: title,
+          name: max.toString(),
+          route: "iframe",
+          redirect: frame,
+        },
+      ]);
+      this.$store.commit("setRoutes", newRoutes);
+      this.$store.commit("setTabs", max.toString());
+      // this.$router.push({
+      //   path: "/moreMenu/iframe",
+      //   query: {
+      //     src: frame,
+      //   },
+      // });
     },
     toPage(e) {
       let route = e.currentTarget.getAttribute("data-route");
       this.updateRoutes(route);
     },
-    updateRoutes(route) {
-      if (this.$store.state.workRoutes.some((item) => item.route == route)) {
-        this.$router.replace({
-          name: route,
-        });
-        return;
-      }
+    updateRoutes(route, params = {}) {
       let currentRoute = routesTarget.routes.filter(
         (item) => item.route == route
       );
-      console.log(currentRoute);
+      let repObj = {
+        path: "/moreMenu/" + route,
+      };
+      if (params.t) {
+        repObj["query"] = {
+          t: params.t,
+        };
+      }
+      // console.log(currentRoute[0].name);
+      if (this.$store.state.workRoutes.some((item) => item.route == route)) {
+        this.$store.commit("setTabs", currentRoute[0].name);
+
+        this.$router.replace(repObj);
+        return;
+      }
       let arr = this.$store.state.workRoutes.concat(currentRoute);
       let newRoutes = Array.from(new Set(arr));
-
-      console.log(newRoutes);
+      this.$store.commit("setTabs", currentRoute[0].name);
       this.$store.commit("setRoutes", newRoutes);
-      // console.log(route);
-      this.$router.replace({
-        name: route,
-      });
+      // this.$router.replace({
+      //   path: "/moreMenu/" + route,
+      // });
+      this.$router.replace(repObj);
     },
     checkBottomMenu(e) {
       let currentIndex = e.currentTarget.getAttribute("data-menuindex");
@@ -440,10 +580,15 @@ export default {
           count: "300",
           creat_time: "2021/3/20",
         },
+        {
+          label: "主套餐档次",
+          count: "300",
+          creat_time: "2021/3/20",
+        },
       ];
 
       this.rankList = data;
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
     getTable() {
       let data = [
@@ -490,7 +635,7 @@ export default {
       ];
 
       this.tableData = data;
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
   },
 };
@@ -558,7 +703,11 @@ export default {
         &:nth-child(2) {
           margin-top: 10px;
         }
-        label {
+        label:nth-child(1) {
+          text-decoration: underline;
+          cursor: pointer;
+        }
+        label:nth-child(2) {
           margin-left: 5px;
         }
       }
@@ -630,6 +779,10 @@ export default {
   .wrapper-right {
     width: 34%;
     margin-left: 1%;
+    > div {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
     .nav-top {
       display: flex;
       justify-content: space-between;
@@ -656,10 +809,15 @@ export default {
           li {
             margin-left: 20px;
             padding: 5px 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #b3d8ff;
             font-size: 12px;
             border-radius: 3px;
             max-width: 100px;
+            // border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #409eff;
+            background: #ecf5ff;
             // margin-top: 10px;
             // &:nth-child(1),
             // &:nth-child(2),
@@ -672,6 +830,11 @@ export default {
             &:nth-child(n + 6) {
               margin-top: 10px;
             }
+          }
+          li:hover {
+            color: #fff;
+            background-color: #409eff;
+            border-color: #409eff;
           }
         }
       }
@@ -717,7 +880,10 @@ export default {
   .shadow-bk {
     background-color: #fff;
     border-radius: 3px;
-    padding: 10px;
+    padding: 10px 0;
   }
+  // .wrapper-left-tp {
+  //   padding-top: 0;
+  // }
 }
 </style>

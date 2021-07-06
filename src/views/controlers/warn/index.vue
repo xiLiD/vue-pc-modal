@@ -45,13 +45,7 @@
         </el-form-item>
       </el-form>
       <!-- <el-button type="danger" size="mini">批量删除</el-button> -->
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        row-key="codeKey"
-        :height="getHeight"
-        border
-      >
+      <el-table :data="tableData" style="width: 100%" row-key="codeKey" border>
         <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
         <el-table-column label="活动编码" prop="city" align="center" />
         <el-table-column label="活动名称" prop="cnty" align="center" />
@@ -160,6 +154,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@import "../resource/style/common.less";
 .notice-page {
   width: 100%;
   // padding: 15px 10px;

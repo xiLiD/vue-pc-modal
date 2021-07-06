@@ -1,7 +1,9 @@
 <template>
   <div class="page-wrapper">
     <el-row>
-      <b> <el-button class="buttona">快捷键管理</el-button></b>
+      <el-button class="buttona" type="primary" size="mini"
+        >快捷键管理</el-button
+      >
     </el-row>
     <el-table
       :header-cell-style="headClass"
@@ -41,7 +43,6 @@
             @change="anniu(scope.row)"
             v-model="scope.row.switch"
             active-color="#13ce66"
-            inactive-color="#ff4949"
           >
           </el-switch>
         </template>
@@ -72,16 +73,7 @@ export default {
       }
       return "";
     },
-    getDate(row) {
-      //   e.currentTarget.dataset.params;
-      //   console.log(this.$refs["button"].getAttribute("data-params"));
-      console.log(row.switch);
-      //   if (e.target.className.indexOf("span") != -1) {
-      //     let params = e.target.getAttribute("data-params");
-      //     // console.log(JSON.parse(params));
-      //     console.log(e.target.className);
-      //   }
-    },
+    getDate(row) {},
     initData() {
       this.tableData.forEach((item, index) => {
         item.id = index + 1;
@@ -130,18 +122,19 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@import "../resource/style/common.less";
 body {
   .buttona {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid darkturquoise;
-    width: 150px;
-    height: 10px;
-    background: rgb(229, 250, 253);
-    color: black;
-    font-size: 300;
-    font-weight: 600;
+    // border: 1px solid darkturquoise;
+    // width: 150px;
+    // height: 10px;
+    // background: rgb(229, 250, 253);
+    // color: black;
+    // font-size: 300;
+    // font-weight: 600;
     margin-top: 15px;
     margin-bottom: 35px;
   }

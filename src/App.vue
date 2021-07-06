@@ -18,7 +18,6 @@ export default {
   color: #333333;
   background-color: rgb(244, 245, 248);
   font-size: 16px;
-  /* margin-top: 60px; */
 }
 .demo-form-inline {
   display: flex;

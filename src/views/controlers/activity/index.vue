@@ -212,9 +212,12 @@
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="名称">
           <template slot-scope="prop">
-            <a @click="openLink" :data-link="prop.row.link" target="_blank">{{
-              prop.row.name
-            }}</a>
+            <a
+              :href="prop.row.link"
+              :data-link="prop.row.link"
+              target="_blank"
+              >{{ prop.row.name }}</a
+            >
           </template>
         </el-table-column>
         <el-table-column prop="type" label="活动类型" />
@@ -228,18 +231,6 @@
         <el-table-column prop="iopType" label="IOP类型" />
         <el-table-column label="操作" class="btn-operate">
           <template>
-            <!-- <i class="icon-operate">
-              <img src="./images/edit.png" title="编辑" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/publish.png" title="发布" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/delete.png" title="删除" fit="contain" />
-            </i>
-            <i class="icon-operate">
-              <img src="./images/spread.png" title="展开" fit="contain" />
-            </i> -->
             <i class="el-icon-edit-outline" title="编辑"></i>
             <i class="el-icon-s-promotion" title="发布"></i>
             <i class="el-icon-delete" title="删除"></i>
@@ -668,7 +659,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -681,7 +672,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -694,7 +685,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -707,7 +698,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -720,7 +711,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -733,7 +724,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -746,7 +737,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
         {
           name: "测试",
@@ -759,7 +750,7 @@ export default {
           status: "草稿",
           area: "湖南省",
           iopType: "省级策划省级执行",
-          link: "www.baidu.com",
+          link: "http://www.baidu.com",
         },
       ],
       dialogInfo: {
@@ -865,6 +856,9 @@ export default {
 // .app-main {
 //   padding: 20px 15px;
 // }
+.page-main {
+  padding: 10px 0;
+}
 .menu-right .menu-btn {
   display: flex !important;
 }
@@ -926,11 +920,11 @@ export default {
     display: inline-block;
     margin: 10px;
   }
-  .page-menu {
-    // text-align: right;
-    .demo-form-inline {
-      justify-content: flex-end;
-    }
+}
+.page-menu {
+  // text-align: right;
+  .demo-form-inline {
+    justify-content: flex-end !important;
   }
 }
 .export-dialog {

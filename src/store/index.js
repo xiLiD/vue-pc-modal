@@ -9,7 +9,9 @@ export default new Vuex.Store({
       "name": "1",
       "route": "workTable",
       "redirect": ""
-    }]
+    }],
+    tabs: '1',
+    token: 'OGhubiao'
   },
   mutations: {
     setRoutes(state, value) {
@@ -19,6 +21,10 @@ export default new Vuex.Store({
       // if (routesArr.some((item) => item.route == value.route)) return;
       state.workRoutes = value;
       sessionStorage.setItem('worker', JSON.stringify(state.workRoutes))
+    },
+    setTabs(state, value) {
+      state.tabs = value;
+      sessionStorage.setItem('tabs', value)
     }
   },
   actions: {},
