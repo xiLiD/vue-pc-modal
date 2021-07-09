@@ -13,8 +13,8 @@ let httpRequest = axios.create()
 httpRequest.interceptors.request.use(
   config => {
     // console.log('请求拦截器成功!',config)
-    if (store.state.token) {
-      config.headers.token = store.state.token;
+    if (store.state.worker.token) {
+      config.headers.token = store.state.worker.token;
     }
     // config.transformRequest = [function (data) {
     //   // 在请求之前对data传参进行格式转换

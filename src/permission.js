@@ -17,6 +17,7 @@ router.beforeEach((to, from, next) => {
   // LOGIN_KEY  0 => 关闭单点登录 1 => 开启单点登录
   // next()
   // return
+  console.log(webpackInfo.LOGIN_KEY)
   if (webpackInfo.LOGIN_KEY == '0') {
     // 非单点登录
     let loading = Loading.service({
@@ -24,12 +25,12 @@ router.beforeEach((to, from, next) => {
       text: "加载中...",
       spinner: "el-icon-loading",
       background: "rgba(0, 0, 0, 0.7)"
-    });
-    Axios.post(baseUrl + '/iopWeb/Common/findUserInfo', {}).then((res) => {
+    }); 
+    Axios.post(baseUrl + '/iop2/monitoring/Common/findUserInfo', {}).then((res) => {
       if (res.data.data.length > 0) {
         let auth = to.name == 'cannalTable' ? 1 : 0
         let index = res.data.data.findIndex((item) => item.scenecode == auth)
-
+        
         let {
           useraccount,
           scenecode,
@@ -37,11 +38,11 @@ router.beforeEach((to, from, next) => {
           ...authObj
         } = res.data.data[index]
         if (useraccount) {
-          store.dispatch('changeToken', useraccount)
+          store.iopStore.dispatch('changeToken',useraccount)
         }
-        store.dispatch('changeAuth', authObj)
+        store.iopStore.dispatch('changeAuth', authObj)
       } else {
-        store.dispatch('changeAuth', {})
+        store.iopStore.dispatch('changeAuth', {})
       }
       next()
       loading.close();
@@ -50,7 +51,7 @@ router.beforeEach((to, from, next) => {
       loading.close();
       Message.error(err)
     })
-  } else {
+  }  else {
     // 单点登录
     let data = {}
     let hasTicket = null
@@ -70,16 +71,16 @@ router.beforeEach((to, from, next) => {
       spinner: "el-icon-loading",
       background: "rgba(0, 0, 0, 0.7)"
     });
-    Axios.post(baseUrl + '/iopWeb/loginSso', data).then(res => {
+    Axios.post(baseUrl + '/activeMonitoring/loginSso', data).then(res => {
       Cookies.set('METASOFT_SSO_C_TICKET', hasTicket)
       if (res.data.data.redirectUrl) {
         window.location.href = res.data.data.redirectUrl
-        store.commit('setToken', '')
-      } else if (res.data.data.loginName || store.state.token !== '') {
+        store.iopStore.commit('setToken', '')
+      } else if (res.data.data.loginName || store.iopStore.token !== '') {
         if (res.data.data.loginName) {
-          store.dispatch('changeToken', res.data.data.loginName)
+          store.iopStore.dispatch('changeToken', res.data.data.loginName)
         }
-        Axios.post(baseUrl + '/iopWeb/Common/findUserInfo', {}, {
+        Axios.post(baseUrl + '/Common/findUserInfo', {}, {
           headers: {
             token: res.data.data.loginName
           }
@@ -92,9 +93,9 @@ router.beforeEach((to, from, next) => {
               scenename,
               ...authObj
             } = res.data.data[index]
-            store.dispatch('changeAuth', authObj)
+            store.iopStore.dispatch('changeAuth', authObj)
           } else {
-            store.dispatch('changeAuth', {})
+            store.iopStore.dispatch('changeAuth', {})
           }
           loading.close();
           next()

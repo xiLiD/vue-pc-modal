@@ -40,7 +40,10 @@
 <script>
 import routesTarget from "./resource/json/routes.json";
 import iframeTarget from "./iframe/index";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapMutations } = createNamespacedHelpers("worker");
+const { setRoutes, setTabs } = mapMutations(["setRoutes", "setTabs"]);
 export default {
   components: {
     iframeTarget,
@@ -63,41 +66,44 @@ export default {
         return state.workRoutes.filter((item) => item.route == "iframe");
       },
       current(state) {
+        console.log(state);
         return state.workRoutes.filter(
           (item) => item.route != "iframe" && state.tabs == item.name
         ).length;
       },
       routes(state) {
+        console.log(state);
         return state.workRoutes.filter((item) => item.name == state.tabs);
       },
     }),
-    editableTabs: {
-      get() {
-        return this.$store.state.workRoutes;
-      },
-      set(v) {
-        this.$store.commit("setRoutes", v);
-      },
-    },
-    tabs_value: {
-      get() {
-        return this.$store.state.tabs;
-      },
-      set(v) {
-        this.$store.commit("setTabs", v);
-      },
-    },
     getWidth() {
       return window.innerWidth - 20 - 20 + "px";
     },
     getHeight() {
       return window.innerHeight - 61 + "px";
     },
+    editableTabs: {
+      get() {
+        return this.$store.state.worker.workRoutes;
+      },
+      set(v) {
+        setRoutes.call(this, v);
+      },
+    },
+    tabs_value: {
+      get() {
+        return this.$store.state.worker.tabs;
+      },
+      set(v) {
+        setTabs.call(this, v);
+      },
+    },
   },
   methods: {
     tabClick(e) {
       let eArr = this.editableTabs.filter((item) => item.name == e.name);
-      this.$store.commit("setTabs", eArr[0].name);
+      // this.$store.commit("worker/setTabs", eArr[0].name);
+      setTabs.call(this, eArr[0].name);
       if (eArr[0].route != "iframe") {
         this.$router.push({
           name: eArr[0].route,
@@ -133,11 +139,11 @@ export default {
           }
         });
       }
-      console.log(routeTarget);
-      this.$store.commit("setTabs", activeName);
+      setTabs.call(this, activeName);
+      // this.$store.commit("worker/setTabs", activeName);
       this.editableTabs = tabs.filter((tab) => tab.name !== targetName);
-      this.$store.commit("setRoutes", this.editableTabs);
-      console.log(routeTarget);
+      setRoutes.call(this, this.editableTabs);
+      // this.$store.commit("worker/setRoutes", this.editableTabs);
       let target = {
         path: routeTarget.route || "workTable",
       };

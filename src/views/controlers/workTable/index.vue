@@ -243,6 +243,10 @@
 </template>
 <script>
 import routesTarget from "../resource/json/routes.json";
+import {createNamespacedHelpers } from "vuex";
+const { mapMutations} = createNamespacedHelpers("worker");
+const {setRoutes,setTabs} = mapMutations(["setRoutes","setTabs"]);
+console.log(setRoutes)
 export default {
   data() {
     return {
@@ -446,6 +450,12 @@ export default {
     getTopNum() {
       return this.topMenu[this.topIndex].num;
     },
+        editableTabs() {
+       return this.$store.state.worker.workRoutes;
+      },
+      tabs_value(){
+     return this.$store.state.worker.tabs;
+  }
   },
   mounted() {
     this.getTable();
@@ -474,11 +484,12 @@ export default {
           ? "https://10.154.144.169:9008" + frame
           : window.location.origin + frame;
       console.log(frame);
-      if (this.$store.state.workRoutes.some((item) => item.title == title)) {
-        let tabs = this.$store.state.workRoutes.filter(
+      if (this.editableTabs.some((item) => item.title == title)) {
+        let tabs = this.editableTabs.filter(
           (item) => item.title == title
         )[0].name;
-        this.$store.commit("setTabs", tabs);
+        setTabs.call(this,tabs)
+        // this.$store.commit("worker/setTabs", tabs);
         // this.$router.push({
         //   path: "/moreMenu/iframe",
         //   query: {
@@ -487,7 +498,7 @@ export default {
         // });
         return;
       }
-      let oldRoutes = this.$store.state.workRoutes;
+      let oldRoutes = this.editableTabs;
       let max = oldRoutes[0].name;
       oldRoutes.forEach(
         (item) => (max = item.name > Number(max) ? item.name : max)
@@ -502,8 +513,10 @@ export default {
           redirect: frame,
         },
       ]);
-      this.$store.commit("setRoutes", newRoutes);
-      this.$store.commit("setTabs", max.toString());
+      setRoutes.call(this,newRoutes);
+      setTabs.call(this,max.toString())
+      // this.$store.commit("worker/setRoutes", newRoutes);
+      // this.$store.commit("worker/setTabs", max.toString());
       // this.$router.push({
       //   path: "/moreMenu/iframe",
       //   query: {
@@ -528,16 +541,18 @@ export default {
         };
       }
       // console.log(currentRoute[0].name);
-      if (this.$store.state.workRoutes.some((item) => item.route == route)) {
-        this.$store.commit("setTabs", currentRoute[0].name);
-
-        this.$router.replace(repObj);
+      if (this.editableTabs.some((item) => item.route == route)) {
+        // this.$store.commit("worker/setTabs", currentRoute[0].name);
+        setTabs.call(this,currentRoute[0].name)
+        // this.$router.replace(repObj);
         return;
       }
-      let arr = this.$store.state.workRoutes.concat(currentRoute);
+      let arr = this.editableTabs.concat(currentRoute);
       let newRoutes = Array.from(new Set(arr));
-      this.$store.commit("setTabs", currentRoute[0].name);
-      this.$store.commit("setRoutes", newRoutes);
+      setTabs.call(this,currentRoute[0].name)
+      setRoutes.call(this,newRoutes)
+      // this.$store.commit("worker/setTabs", currentRoute[0].name);
+      // this.$store.commit("worker/setRoutes", newRoutes);
       // this.$router.replace({
       //   path: "/moreMenu/" + route,
       // });

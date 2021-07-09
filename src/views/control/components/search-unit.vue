@@ -21,12 +21,27 @@
   </el-dialog>
 </template>
 <script>
-import fields from '../json/config.js';
+import fields from "../json/config.js";
 export default {
   data() {
     return {
       dialogVisible: false,
-      checkList: ["日期","月份","地市", "区县","网格","客户等级","受理渠道类型","一级目录","二级目录","三级目录","四级目录","五级目录","六级目录","七级目录"],
+      checkList: [
+        "日期",
+        "月份",
+        "地市",
+        "区县",
+        "网格",
+        "客户等级",
+        "受理渠道类型",
+        "一级目录",
+        "二级目录",
+        "三级目录",
+        "四级目录",
+        "五级目录",
+        "六级目录",
+        "七级目录",
+      ],
       checkMenu: [
         {
           name: "日期",
@@ -101,26 +116,26 @@ export default {
     },
     getSearch() {
       let checkList = this.checkList;
-      let arr = []
-      for(var i in fields){
-        if(checkList.includes(fields[i])){
+      let arr = [];
+      for (var i in fields) {
+        if (checkList.includes(fields[i])) {
           arr.push({
-            key : i,
-            value : fields[i]
-          })
+            key: i,
+            value: fields[i],
+          });
         }
       }
       arr = arr.concat([
         {
-          key : 'count',
-          value : '工单量'
+          key: "count",
+          value: "工单量",
         },
         {
-          key : 'num',
-          value : '平均处理时长'
-        }
-      ])
-      this.$emit("getSearch",arr);
+          key: "num",
+          value: "平均处理时长",
+        },
+      ]);
+      this.$emit("getSearch", arr);
       this.setShow(false);
     },
   },
