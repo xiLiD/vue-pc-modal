@@ -2,11 +2,11 @@
 const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/knowledgeMap/index.vue')
 // const knowledgeMap = () => import('@/views/iop/handle/cannalTable.vue')
-// const knowledgeMap = () => import('@/views/iop/handle/productTable.vue')
+const knowledgeMap = () => import('@/views/capital/index.vue')
 // const knowledgeMap = () => import('@/views/platform/index.vue');
 // const knowledgeMap = () => import('@/views/network/components/answer/answer.vue')
 // const knowledgeMap = () => import('@/views/controlers/announcement/index.vue')
-const knowledgeMap = () => import('@/views/control/index.vue')
+// const knowledgeMap = () => import('@/views/control/index.vue')
 // console.log(knowledgeMap)
 export default {
   path: "/",

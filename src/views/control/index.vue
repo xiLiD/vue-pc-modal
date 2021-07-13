@@ -121,17 +121,36 @@
               :data="tableData"
               style="width: 100%"
               row-key="codeKey"
-              :height="getHeight"
+              height="500px"
               :row-class-name="tableRowClassName"
               border
             >
-              <el-table-column :label="item.value" :prop="item.key" min-width="100px" align="center" v-for="(item,index) in fields" :key="index" />
+              <el-table-column
+                :label="item.value"
+                :prop="item.key"
+                min-width="100px"
+                align="center"
+                v-for="(item, index) in fields"
+                :key="index"
+              />
               <!-- <el-table-column slot-scope="scope" label="工单明显表">
                 <template>
                   <a href="#">点击前往</a>
                 </template>
               </el-table-column> -->
             </el-table>
+            <el-pagination
+              background
+              :hide-on-single-page="queryData.total <= 10"
+              :current-page.sync="queryData.pageNo"
+              :page-size="queryData.pageSize"
+              :total="queryData.total"
+              @size-change="getChange"
+              @current-change="currentSearch"
+              style="margin-top: 20px; text-align: center"
+              :page-sizes="[10, 20, 30, 50, 70, 100]"
+              layout="total, sizes, prev, pager, next"
+            />
           </div>
         </div>
       </el-col>
@@ -142,7 +161,7 @@
   </div>
 </template>
 <script>
-import fields from './json/config.js';
+import fields from "./json/config.js";
 import apiSend from "@/api/iop/control/httpRequest";
 import SearchComplete from "./components/search-complete";
 import SearchUnit from "./components/search-unit";
@@ -215,13 +234,13 @@ export default {
             id: 1001,
             label: "是",
             children: [],
-            foreFather : '是否抱怨单'          
+            foreFather: "是否抱怨单",
           },
           {
             id: 1002,
             label: "否",
             children: [],
-            foreFather : '是否抱怨单'          
+            foreFather: "是否抱怨单",
           },
         ],
       },
@@ -256,28 +275,10 @@ export default {
         params: {},
       },
     ];
-    data.forEach((item)=>{
-      item.foreFather = item.label
-    })
+    data.forEach((item) => {
+      item.foreFather = item.label;
+    });
     var leftMenu = data.slice();
-      let arr = [];
-      for(var i in fields){
-        arr.push({
-            key : i,
-            value : fields[i]
-        })
-      }
-      arr = arr.concat([
-        {
-          key : 'count',
-          value : '工单量'
-        },
-        {
-          key : 'num',
-          value : '平均处理时长'
-        }
-      ])
-      console.log(arr);
     return {
       menuList: leftMenu,
       areaList: data,
@@ -311,7 +312,7 @@ export default {
       operateList: [
         {
           key: 10,
-          value: "报表展示字段"
+          value: "报表展示字段",
         },
         {
           key: 11,
@@ -325,7 +326,13 @@ export default {
       allCheck: [],
       isIndeterminate: false,
       checkAll: false,
-      fields : arr
+      fields: [],
+      queryData: {
+        total: 1,
+        pageSize: 10,
+        pageNo: 1,
+      },
+      currentKeys: [],
     };
   },
   computed: {
@@ -339,13 +346,48 @@ export default {
     },
   },
   mounted() {
-    let arr = this.setId(this.areaList);
-    let that = this;
-    window.onresize = (e) => {
-      that.getHeight = window.innerHeight - 40 - 50 - 15 - 12 + "px";
-    };
+    this.fields = this.setFields(fields);
   },
   methods: {
+    setFields(current) {
+      let list = [];
+      for (var i in current) {
+        var a = i.split("_");
+        var o = a[0];
+        for (var j = 1; j < a.length; j++) {
+          o = o + a[j].slice(0, 1).toUpperCase() + a[j].slice(1);
+        }
+        console.log(o);
+        list.push({
+          key: o,
+          value: current[i],
+        });
+      }
+      console.log(list);
+      list = list.concat([
+        {
+          key: "countres",
+          value: "工单量",
+        },
+        {
+          key: "sumres",
+          value: "平均处理时长",
+        },
+      ]);
+      console.log(list);
+      function titleCase(str) {
+        //把字符串所有的字母变为小写，并根据空格转换成字符数组
+        let arr = str.toLowerCase().split(" ");
+        //遍历字符数组
+        for (var i = 0; i < arr.length; i++) {
+          //把第一个字符变为大写
+          arr[i] = arr[i][0].toUpperCase() + arr[i].substring(1, arr[i].length);
+        }
+        //加上空格，返回原模式的字符串
+        return arr.join(" ");
+      }
+      return list;
+    },
     showImport() {
       this.$refs["import-complete"].setShow(true);
     },
@@ -431,14 +473,27 @@ export default {
     showSearch() {
       this.$refs["search-unit"].setShow(true);
     },
+    currentSearch(e) {
+      this.getSearch(this.currentKeys);
+    },
+    getChange(e) {
+      console.log(e);
+      this.queryData.pageNo = 1;
+      this.queryData.pageSize = e;
+      this.getSearch(this.currentKeys);
+    },
     getSearch(arr) {
       var tree = this.$refs["tree"].getCheckedNodes();
       var moreTree = this.$refs["search-tree"].getSearch();
-      console.log(tree)
-      console.log(moreTree)
       var allTree = tree.concat(moreTree);
-      console.log(arr);
-      this.fields = arr;
+      this.currentKeys = arr;
+      let a = {};
+      for (var i in arr) {
+        a[arr[i]["key"]] = arr[i]["value"];
+      }
+      console.log(a);
+      this.fields = this.setFields(a);
+      let queryData = this.queryData;
       var params = {
         busiType1Code: [],
         busiType2Code: [],
@@ -456,124 +511,154 @@ export default {
         l1BusiTypeCode: [],
         l2BusiTypeCode: [],
         secondConfirmCode: [],
-        startDate: this.formInline.date ? this.formInline.date[0] : '',
-        endDate: this.formInline.date ? this.formInline.date[1] : '',
+        startDate: this.formInline.date ? this.formInline.date[0] : "",
+        endDate: this.formInline.date ? this.formInline.date[1] : "",
         statisMonth: "",
         upChnlType: [],
+        fields: arr.map((item) => item.key),
+        ...queryData,
       };
-      console.log(allTree)
+      console.log(allTree);
       var query = this.fillParams(params, allTree);
       console.log(query);
-      apiSend['findIndexInfo']({data : query}).then((res)=>{
-        console.log(res)
-        this.tableData = res.data.data;
-      }).catch((err)=>{
-        console.log(err)
-      })
-      
+      apiSend["findIndexInfo"]({ data: query })
+        .then((res) => {
+          console.log(res);
+          this.tableData = res.data.data.records;
+          this.queryData.pageNo = res.data.data.current;
+          this.queryData.total = res.data.data.total;
+          // this.queryData.size = res.data.data.size;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     fillParams(params, arr) {
       let query = JSON.parse(JSON.stringify(params));
-      arr.forEach((item)=>{
-          if(item.foreFather == '地域'){
-            query['cityCode'].push(item.value)
-          }
-      })      
+      arr.forEach((item) => {
+        if (item.foreFather == "地域") {
+          query["cityCode"].push(item.value);
+        }
+      });
       arr = this.sortArea(arr);
       arr.forEach((item) => {
         for (var i in query) {
           if (Object.prototype.hasOwnProperty.call(item, i)) {
             if (item[i]) {
               query[i].push(item[i]);
-              query[i] = Array.from(new Set(query[i]))
+              query[i] = Array.from(new Set(query[i]));
             }
           }
         }
-        if(item.label == '是' || item.label == "否"){
-            query['isCmplnsTicket'] = item.label;
-        } 
+        if (item.label == "是" || item.label == "否") {
+          query["isCmplnsTicket"] = item.label;
+        }
       });
       return query;
     },
-    setParents(key,value,arr){
+    setParents(key, value, arr) {
       arr.forEach((item) => {
         item[key] = value;
         for (var i in item) {
-          if(item[i] && (i.indexOf('Code') != -1 || i.indexOf('Type') != -1)){
-            if(Object.prototype.hasOwnProperty.call(item,'children')){
-                item.children = this.setParents('parentId',item[i],item.children)
+          if (item[i] && (i.indexOf("Code") != -1 || i.indexOf("Type") != -1)) {
+            if (Object.prototype.hasOwnProperty.call(item, "children")) {
+              item.children = this.setParents(
+                "parentId",
+                item[i],
+                item.children
+              );
             }
           }
         }
       });
       return arr;
     },
-    sortArea(arr){
+    sortArea(arr) {
       var newArr = arr;
-      newArr.forEach((item)=>{
-        if(item.value){
-          item.children = this.setParents('parentId',item.value,item.children);
-        }else {
+      newArr.forEach((item) => {
+        if (item.value) {
+          item.children = this.setParents(
+            "parentId",
+            item.value,
+            item.children
+          );
+        } else {
           for (var i in item) {
-            if(item[i] && (i.indexOf('Code') != -1 || (i.indexOf('Type') != -1 && i.indexOf('Name') == -1))){
-              if(Object.prototype.hasOwnProperty.call(item,'children')){
-                 item.children = this.setParents('parentId',item[i],item.children)
+            if (
+              item[i] &&
+              (i.indexOf("Code") != -1 ||
+                (i.indexOf("Type") != -1 && i.indexOf("Name") == -1))
+            ) {
+              if (Object.prototype.hasOwnProperty.call(item, "children")) {
+                item.children = this.setParents(
+                  "parentId",
+                  item[i],
+                  item.children
+                );
               }
             }
           }
         }
-      })
+      });
       newArr = this.removalData(newArr);
-      return newArr;      
+      return newArr;
     },
-    removalData(arr){
-      var newArr = arr.filter((item)=> (item.foreFather !== null && item.label !== '是否抱怨单') || item.foreFather === '地域');
+    removalData(arr) {
+      var newArr = arr.filter(
+        (item) =>
+          (item.foreFather !== null && item.label !== "是否抱怨单") ||
+          item.foreFather === "地域"
+      );
       // 过滤第一层数据 取值  本地 地域 => value  保留父数据 去除多余子数据
       // 如果是包含 p
-      // 筛选 是否抱怨单 存在 是 和 否 两个 则 过滤该筛选条件 
+      // 筛选 是否抱怨单 存在 是 和 否 两个 则 过滤该筛选条件
       let filterArr = [];
       var parentsArr = [];
-      newArr.forEach((item)=>{
-        if(item.value){
-          parentsArr.push(item.value)
+      newArr.forEach((item) => {
+        if (item.value) {
+          parentsArr.push(item.value);
         }
-        if(item.parentId){
-          parentsArr.push(item.parentId)
+        if (item.parentId) {
+          parentsArr.push(item.parentId);
         }
-        if(item.foreFather == '是否抱怨单'){
-          filterArr.push(item.label)
+        if (item.foreFather == "是否抱怨单") {
+          filterArr.push(item.label);
         }
-      })
-      
+      });
+
       parentsArr = Array.from(new Set(parentsArr));
-      newArr.filter((item)=>{
+      newArr.filter((item) => {
         for (var i in item) {
-            if(item[i] && (i.indexOf('Code') != -1 || (i.indexOf('Type') != -1 && i.indexOf('Name') == -1))){
-              return parentsArr.includes(item[i]);
-            }
+          if (
+            item[i] &&
+            (i.indexOf("Code") != -1 ||
+              (i.indexOf("Type") != -1 && i.indexOf("Name") == -1))
+          ) {
+            return parentsArr.includes(item[i]);
           }
-      })
-      
-      newArr = newArr.filter((item)=> {
-        if(parentsArr.length == 0){
-          return true
-        }else {
-         return !(parentsArr.includes(item.parentId))
         }
-      })
-      console.log(newArr)
-      newArr = newArr.filter((item)=> {
-        if(item.label == '是' || item.label == '否'){
-          if(filterArr.includes('是') && filterArr.includes('否')){
-            return item.foreFather != '是否抱怨单'
+      });
+
+      newArr = newArr.filter((item) => {
+        if (parentsArr.length == 0) {
+          return true;
+        } else {
+          return !parentsArr.includes(item.parentId);
+        }
+      });
+      console.log(newArr);
+      newArr = newArr.filter((item) => {
+        if (item.label == "是" || item.label == "否") {
+          if (filterArr.includes("是") && filterArr.includes("否")) {
+            return item.foreFather != "是否抱怨单";
           }
-          return true
+          return true;
         }
-        return true
-      })
-       console.log(newArr);
+        return true;
+      });
+      console.log(newArr);
       return newArr;
-    },  
+    },
     setId(arr) {
       arr.forEach((item, index) => {
         if (Object.prototype.hasOwnProperty.call(item, "children")) {
@@ -610,6 +695,14 @@ export default {
     getExport() {
       this.$message.warning("暂未开发！");
     },
+    getChild(arr) {
+      arr.forEach((item) => {
+        if (Object.prototype.hasOwnProperty.call(item, "child")) {
+          item.child = this.getChild(item.child);
+        }
+      });
+      return arr.filter((item) => item.isShow);
+    },
   },
 };
 </script>
@@ -630,8 +723,8 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     height: calc(100vh - 40px);
-    position:relative;
-    z-index:200;
+    position: relative;
+    z-index: 200;
   }
   .el-tree {
     margin-top: 10px;
@@ -763,13 +856,19 @@ export default {
   }
 }
 
-
 /deep/ .el-tree > .el-tree-node > .el-tree-node__content .el-checkbox {
-    display: none;
+  display: none;
 }
-/deep/ .main-tree > .el-tree-node:nth-child(1) > .el-tree-node__content .el-tree-node__expand-icon,
-/deep/ .main-tree  > .el-tree-node:nth-child(6) > .el-tree-node__content .el-tree-node__expand-icon {
+/deep/
+  .main-tree
+  > .el-tree-node:nth-child(1)
+  > .el-tree-node__content
+  .el-tree-node__expand-icon,
+/deep/
+  .main-tree
+  > .el-tree-node:nth-child(6)
+  > .el-tree-node__content
+  .el-tree-node__expand-icon {
   opacity: 0;
 }
-
 </style> 

@@ -125,16 +125,16 @@ export default {
           });
         }
       }
-      arr = arr.concat([
-        {
-          key: "count",
-          value: "工单量",
-        },
-        {
-          key: "num",
-          value: "平均处理时长",
-        },
-      ]);
+      // arr = arr.concat([
+      //   {
+      //     key: "count",
+      //     value: "工单量",
+      //   },
+      //   {
+      //     key: "num",
+      //     value: "平均处理时长",
+      //   },
+      // ]);
       this.$emit("getSearch", arr);
       this.setShow(false);
     },
