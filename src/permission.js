@@ -11,7 +11,6 @@ import {
   Loading
 } from "element-ui";
 router.beforeEach((to, from, next) => {
-
   document.title = webpackInfo.title // 页面标题
   let baseUrl = process.env.NODE_ENV === "development" ? base.development : base.production;
   // LOGIN_KEY  0 => 关闭单点登录 1 => 开启单点登录

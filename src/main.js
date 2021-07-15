@@ -18,7 +18,7 @@ import "@/styles/reset.css"
 import "@/styles/common.css";
 import "@/styles/index.css";
 import VueLazyload from 'vue-lazyload'
-// import './permission.js';
+import './permission.js';
 Vue.use(VueLazyload);
 Vue.use(element); // global css
 Vue.config.productionTip = false;
