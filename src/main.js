@@ -18,7 +18,7 @@ import "@/styles/reset.css"
 import "@/styles/common.css";
 import "@/styles/index.css";
 import VueLazyload from 'vue-lazyload'
-import './permission.js';
+// import './permission.js';
 Vue.use(VueLazyload);
 Vue.use(element); // global css
 Vue.config.productionTip = false;
@@ -38,6 +38,12 @@ Vue.prototype.$copy = function (value) {
 
 import scroll from 'vue-seamless-scroll'
 
+// 引入amfe-flexible
+// 移动端适配方案  =>  结合vue.config.js 配置css项
+import 'amfe-flexible/index';
+
+
+import 'swiper/swiper.min.css'
 Vue.use(scroll)
 const vue = new Vue({
     router,

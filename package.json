@@ -12,7 +12,7 @@
         "clipboard": "^2.0.8",
         "core-js": "^3.6.5",
         "echarts": "^4.9.0",
-        "element-ui": "^2.13.2",    
+        "element-ui": "^2.13.2",
         "heatmap.js": "^2.0.5",
         "js-cookie": "^2.2.1",
         "leaflet": "^1.7.1",
@@ -30,6 +30,7 @@
         "@vue/cli-plugin-pwa": "^4.5.0",
         "@vue/cli-service": "^4.5.0",
         "@vue/eslint-config-prettier": "^6.0.0",
+        "amfe-flexible": "^2.2.1",
         "babel-eslint": "^10.1.0",
         "babel-polyfill": "^6.26.0",
         "eslint": "^6.7.2",
@@ -37,7 +38,11 @@
         "eslint-plugin-vue": "^6.2.2",
         "less": "^3.0.4",
         "less-loader": "^5.0.0",
+        "postcss": "^8.1.10",
+        "postcss-pxtorem": "^5.1.1",
+        "postcss-url": "^10.1.1",
         "prettier": "^1.19.1",
+        "swiper": "^6.8.0",
         "vue-template-compiler": "^2.6.11"
     }
 }

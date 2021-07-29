@@ -3,6 +3,8 @@ function resolve(dir) {
   return path.join(__dirname, dir); //path.join(__dirname)设置绝对路径
 }
 const webpackInfo = require('./src/utils/webpack')
+// 通过webpack 适配 移动端
+const pxtorem = require('postcss-pxtorem');
 // const baseUrl = process.env.NODE_ENV === "production" ? "/static/" : "/"; //font scss资源路径 不同环境切换控制
 module.exports = {
   // 基本路径
@@ -38,8 +40,19 @@ module.exports = {
     extract: true,
     // 开启 CSS source maps?
     sourceMap: false,
-    // css预设器配置项
-    loaderOptions: {},
+    // css预设器配置项  => 移动端
+    // loaderOptions: {
+    //   postcss: {
+    //     plugins: [
+    //       require("postcss-pxtorem")({
+    //         // 把px单位换算成rem单位
+    //         rootValue: 37.5, // 换算的基数(设计图750的根字体为75)
+    //         // selectorBlackList: ['weui', 'mu'], // 忽略转换正则匹配项
+    //         propList: ["*"],
+    //       }),
+    //     ],
+    //   }
+    // },
     // 启用 CSS modules for all css / pre-processor files.
     modules: false
   },

@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "./assets/common.less";
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -76,5 +77,9 @@ export default {
 
 .el-table colgroup.gutter {
   display: table-cell !important;
+}
+
+/deep/ .el-form--inline .el-form-item {
+  margin-bottom: 0px !important;
 }
 </style>

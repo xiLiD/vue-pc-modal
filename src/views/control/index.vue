@@ -374,7 +374,6 @@ export default {
           value: "平均处理时长",
         },
       ]);
-      console.log(list);
       function titleCase(str) {
         //把字符串所有的字母变为小写，并根据空格转换成字符数组
         let arr = str.toLowerCase().split(" ");
