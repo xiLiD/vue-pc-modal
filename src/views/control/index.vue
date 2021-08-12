@@ -106,12 +106,12 @@
                   <el-button type="primary" @click="showSearch" size="mini"
                     >查询</el-button
                   >
-                  <el-button type="warning" @click="showImport" size="mini"
+                  <!-- <el-button type="warning" @click="showImport" size="mini"
                     >导入</el-button
                   >
                   <el-button type="success" @click="getExport" size="mini"
                     >导出</el-button
-                  >
+                  > -->
                 </el-form-item>
               </div>
             </el-form>
@@ -128,7 +128,7 @@
               <el-table-column
                 :label="item.value"
                 :prop="item.key"
-                min-width="100px"
+                :min-width="getColumnWidth(item)"
                 align="center"
                 v-for="(item, index) in fields"
                 :key="index"
@@ -272,7 +272,11 @@ export default {
         },
         id: 6,
         children: [],
-        params: {},
+        params: {
+          busiTypeCode: "",
+          busiTypeName: "",
+          parentId: "9999",
+        },
       },
     ];
     data.forEach((item) => {
@@ -349,6 +353,18 @@ export default {
     this.fields = this.setFields(fields);
   },
   methods: {
+    getColumnWidth(row) {
+      let width = 120;
+      switch (row.value) {
+        case "区县":
+          width = 150;
+          break;
+        case "网格":
+          width = 150;
+          break;
+      }
+      return width + "px";
+    },
     setFields(current) {
       let list = [];
       for (var i in current) {
@@ -435,6 +451,7 @@ export default {
       return arr;
     },
     treeClick(target, node, current) {
+      console.log(target);
       if (
         target.keyPath == "findCntyVo" ||
         target.keyPath == "findSevenCatalogInfo"
@@ -522,11 +539,11 @@ export default {
       console.log(query);
       apiSend["findIndexInfo"]({ data: query })
         .then((res) => {
-          console.log(res);
+          console.log(this.tableData);
           this.tableData = res.data.data.records;
           this.queryData.pageNo = res.data.data.current;
           this.queryData.total = res.data.data.total;
-          // this.queryData.size = res.data.data.size;
+          this.queryData.size = res.data.data.size;
         })
         .catch((err) => {
           console.log(err);

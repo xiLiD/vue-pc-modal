@@ -36,23 +36,24 @@ httpRequest.interceptors.response.use(
     // 状态码 200
     // 普通接口类型 => 成功
     // 根据后端不同返回值 进行逻辑判断
-    _loading_.close();
+    
     if (res.status == 200 && res.data && res.data.code == '0') {
       // _loading_.close();
+      _loading_.close();
       return Promise.resolve(res);
     } else if (res.status == 200 && res.data.type) {
-      // _loading_.close();
+      _loading_.close();
       // 数据流类型  => 成功
       return Promise.resolve(res);
     } else {
-      // _loading_.close();
+      _loading_.close();
       // 普通接口类型  => 失败
       return Promise.reject(res);
     }
   },
   error => {
     // Vue.$httpLoading.close();
-    _loading_.close();
+    // _loading_.close();
     console.log("拦截器响应失败!", error);
     console.log(error.response);
     if (error && error.response) {

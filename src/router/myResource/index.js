@@ -1,6 +1,6 @@
 const routes = [{
-    path: '/sourceService/:id/:type',
-    name: 'sourceService',
+    path: '/serviceView/:id/:type',
+    name: 'serviceView',
     component: () => import('@/views/myResource/serviceView/index.vue'),
 },{
     path: '/marketView/:id/:type',

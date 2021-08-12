@@ -75,12 +75,12 @@ module.exports = {
     https: false,
     hotOnly: false,
     proxy: {
-      "/iop_web_war": {
-        target: "https://200.200.1.172:8080",
+      "/media": {
+        target: "https://200.200.1.87:8085",
         // target : 'http://192.168.199.35:9090',
         changeOrigin: true,
         pathRewrite: {
-          "^/iop_web_war": ""
+          "^/media": ""
         }
       }
     } // 设置代理 

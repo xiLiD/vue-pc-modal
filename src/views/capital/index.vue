@@ -938,11 +938,6 @@ export default {
       // console.log(document.queryElementByClassName("amiddboxttop"));
       return window.innerWidth * 0.48;
     },
-    swiper() {
-      if (this.isPreview && this.json.isAnimation == "true") {
-        return this.$refs.NSwiper.swiper;
-      }
-    },
     Index() {
       return this.isIndex;
     },

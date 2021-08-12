@@ -2,7 +2,7 @@ import { requestGet, requestPost, requestFile, requestExcel, urlGetRequest } fro
 import url from "./url";
 import base from "@/api/baseUrl";
 function getParams(params, name) {
-    let baseUrl = process.env.NODE_ENV === "development" ? base.development : base.production;
+    let baseUrl = process.env.NODE_ENV === "development" ? base.development : base.production + '/DemoServer';
     name = name ? name : "";
     return Object.assign(
         {},
@@ -48,6 +48,7 @@ const findServiceTypeInfo = function (params = {}) {
 };
 
 const findSevenCatalogInfo = function (params = {}) {
+    params.loadingTime = 5000;
     params.url = url.findSevenCatalogInfo;
     return requestPost(getParams(params));
 };

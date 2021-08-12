@@ -2,11 +2,11 @@
 const Layout = () => import('@/views/layout/layout.vue')
 // const knowledgeMap = () => import('@/views/knowledgeMap/index.vue')
 // const knowledgeMap = () => import('@/views/iop/handle/cannalTable.vue')
-const knowledgeMap = () => import('@/views/capital/capital.vue')
+// const knowledgeMap = () => import('@/views/capital/capital.vue')
 // const knowledgeMap = () => import('@/views/platform/index.vue');
 // const knowledgeMap = () => import('@/views/network/components/answer/answer.vue')
-// const knowledgeMap = () => import('@/views/controlers/announcement/index.vue')
-// const knowledgeMap = () => import('@/views/control/index.vue')
+const knowledgeMap = () => import('@/views/control/index.vue')
+// const knowledgeMap = () => import('@/views/iop/media/index.vue')
 
 import resource from './myResource/index';
 import table from './tableIndex/index';

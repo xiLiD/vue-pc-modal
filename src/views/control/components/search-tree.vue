@@ -1,8 +1,10 @@
 <template>
-    <div :class="['tree-box',dialogVisible ? 'show-tree': '']" @click="dialogVisible= false">
-
-    <div :class="['tree-unit']" >
-          <div class="tree-title">地域与目录树选择</div>
+  <div
+    :class="['tree-box', dialogVisible ? 'show-tree' : '']"
+    @click="dialogVisible = false"
+  >
+    <div :class="['tree-unit']">
+      <div class="tree-title">地域与目录树选择</div>
       <div class="close-icon">
         <i class="el-icon-close"></i>
       </div>
@@ -21,7 +23,7 @@
 
       <div class="unit-center">
         <el-tree
-        class="other-tree"
+          class="other-tree"
           :data="areaList"
           node-key="id"
           ref="more-tree"
@@ -71,7 +73,7 @@
         <el-button type="primary" size="mini">确定</el-button>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
 import apiSend from "@/api/iop/control/httpRequest";
@@ -165,21 +167,9 @@ export default {
         id: 6,
         children: [],
         params: {
-          busiType1Code: "",
-          busiType1Name: "",
-          busiType2Code: "",
-          busiType2Name: "",
-          busiType3Code: "",
-          busiType3Name: "",
-          busiType4Code: "",
-          busiType4Name: "",
-          busiType5Code: "",
-          busiType5Name: "",
-          busiType6Code: "",
-          busiType6Name: "",
-          dataSrc: "",
-          secondConfirmCode: "",
-          secondConfirmName: "",
+          busiTypeCode: "",
+          busiTypeName: "",
+          parentId: "9999",
         },
       },
     ];
@@ -218,8 +208,20 @@ export default {
         }
       });
     },
+    setCatal(arr) {
+      for (var i in arr) {
+        for (var prop in arr[i]) {
+          arr[i]["label"] = arr[i]["busiTypeName"];
+        }
+        if (Object.prototype.hasOwnProperty.call(arr[i], "children")) {
+          this.setCatal(arr[i].children);
+        }
+      }
+      return arr;
+    },
     // 将list中的数据填充到 children 中
-    setList(arr) {
+    setList(arr, target) {
+      console.log(target);
       for (var i in arr) {
         for (var prop in arr[i]) {
           if (arr[i][prop] != null) {
@@ -227,6 +229,11 @@ export default {
             obj[prop] = arr[i][prop];
             if (prop.indexOf("Name") != -1) {
               arr[i]["label"] = arr[i][prop];
+            }
+            if (target.label == "七级目录树" || target.parentId) {
+              arr[i]["keyPath"] = target.keyPath;
+              arr[i]["params"] = target.params;
+              arr[i]["params"]["parentId"] = arr[i]["busiTypeCode"];
             }
             if (prop.indexOf("Code") != -1) {
               arr[i]["currentId"] = arr[i][prop];
@@ -243,8 +250,11 @@ export default {
             newArr = arr[i].list || [];
           }
         }
+        if (Object.prototype.hasOwnProperty.call(arr[i], "children")) {
+          newArr = arr[i].children;
+        }
         arr[i].children = newArr;
-        this.setList(newArr);
+        this.setList(newArr, target);
       }
       return arr;
     },
@@ -252,9 +262,9 @@ export default {
       if (target.label == "地域") {
         return;
       }
-      if (target.children.length > 0) {
-        return;
-      }
+      // if (target.children.length > 0) {
+      //   return;
+      // }
       if (target.label == "地域" && target.foreFather == "null") {
         return;
       }
@@ -267,7 +277,15 @@ export default {
 
       apiSend[target.keyPath]({ data: target.params, showLoading: false })
         .then((res) => {
-          let arr = this.setList(res.data.data);
+          // if (target.label == "七级目录树") {
+          //   let setArr = this.setCatal(res.data.data);
+          //   console.log(setArr);
+          // } else {
+          //   let arr = this.setList(res.data.data);
+          //   let newArr = this.setChildren(this.areaList, target, arr);
+          // }
+          let arr = this.setList(res.data.data, target);
+          console.log(arr);
           let newArr = this.setChildren(this.areaList, target, arr);
         })
         .catch((err) => {
@@ -302,8 +320,8 @@ export default {
       this.isIndeterminate = false;
     },
     getSearch() {
-        var currentKeys = this.$refs["more-tree"].getCheckedNodes();
-        return currentKeys;
+      var currentKeys = this.$refs["more-tree"].getCheckedNodes();
+      return currentKeys;
     },
     setId(arr) {
       arr.forEach((item, index) => {
@@ -336,29 +354,29 @@ export default {
 </script>
 <style lang="less" scoped>
 .tree-box {
-  background-color:rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   width: 100%;
-  height:100vh;
+  height: 100vh;
   position: fixed;
-  top:0;
-  left:0; 
+  top: 0;
+  left: 0;
   overflow-y: scroll;
-  z-index:1000;
+  z-index: 1000;
   display: none;
   // display: flex;
   // justify-content: center;
   // align-items:center;
 }
 .tree-unit {
-  box-sizing:border-box;
-  width:70%;
-  margin: 15vh auto 50px;
+  box-sizing: border-box;
+  width: 70%;
+  margin: 10vh auto 50px;
   border-radius: 5px;
-  background-color:#fff;
+  background-color: #fff;
   padding: 15px 20px;
-  position:relative;
+  position: relative;
   min-height: 400px;
-  max-height: 90vh;
+  height: 80vh;
   // opacity: 0;
 }
 /deep/ .el-select-dropdown__item {
@@ -369,7 +387,8 @@ export default {
   box-sizing: border-box;
   margin-top: 20px;
   justify-content: space-between;
-
+  height: calc(80vh - 120px);
+  overflow-y: scroll;
   .el-form {
     width: 30%;
     // font-size: 12px;
@@ -390,18 +409,17 @@ export default {
     flex-direction: column;
     line-height: 2 !important;
   }
-  
 }
 .unit-footer {
-  position:absolute;
-  right : 20px;
-  bottom:15px;
+  position: absolute;
+  right: 20px;
+  bottom: 15px;
 }
 .close-icon {
-  position:absolute;
-  right : 20px;
-  top:15px;
-  font-size:20px;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 20px;
   cursor: pointer;
 }
 .show-tree {
@@ -410,23 +428,29 @@ export default {
 .show-tree .tree-unit {
   // opacity: 1;
   // transition: 3s;
-  z-index:9999;
-  animation: showFrame .3s ease-in-out;
+  z-index: 9999;
+  animation: showFrame 0.3s ease-in-out;
   // margin-top: 40px;
 }
 .tree-title {
   line-height: 24px;
-    font-size: 18px;
-    color: #303133;
+  font-size: 18px;
+  color: #303133;
 }
 @keyframes showFrame {
-  0%{
+  0% {
     opacity: 0;
     margin-top: 14vh;
   }
   100% {
-    margin-top: 15vh;
+    margin-top: 10vh;
     opacity: 1;
   }
 }
+// /*修改滚动条样式*/
+// div::-webkit-scrollbar {
+//   width: 10px;
+//   height: 10px;
+//   /**/
+// }
 </style>
