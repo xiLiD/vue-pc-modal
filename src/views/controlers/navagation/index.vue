@@ -1,9 +1,14 @@
 <template>
-  <div class="page-wrapper">
+  <div class="administration-wrapper">
     <el-row>
-      <el-button class="buttona" type="primary" size="mini"
-        >快捷键管理</el-button
-      >
+      <el-button
+        class="buttona"
+        type="primary"
+        size="mini"
+        @click="toPage"
+        data-route="administration"
+        v-if="userInfo.isAdmin"
+      >快捷键管理</el-button>
     </el-row>
     <el-table
       :header-cell-style="headClass"
@@ -13,38 +18,29 @@
       style="width: 100%"
       :row-class-name="tableRowClassName"
     >
-      <el-table-column prop="date" label="快捷图标" width="180" align="center">
+      <el-table-column label="快捷图标" width="180" align="center">
         <template slot-scope="scope">
-          <div @click.prevent="getDate(scope.row)" ref="button">
+          <div ref="button">
             <el-button size="mini" type="primary" plain>
               <!-- @click.native 组件中点击事件用@click.native -->
-              {{ scope.row.date }}
+              {{ scope.row.shortcutIconBlob }}
             </el-button>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="name"
-        label="快捷键名称"
-        width="180"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="功能描述"
-        width="300"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="ok" label="可用" align="center">
+      <el-table-column prop="shortcutKeyName" label="快捷键名称" width="180" align="center"></el-table-column>
+      <el-table-column prop="functionalDescription" label="功能描述" width="300" align="center"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="180" align="center"></el-table-column>
+      <el-table-column prop="updateTime" label="修改时间" width="180" align="center"></el-table-column>
+      <el-table-column label="状态" width="120" align="center">
+
+                <!-- <el-form-item label="状态" label-width="80px" v-if="announceInfo.name == '新增公告'">
+            <el-switch v-model="noticeType" active-color="#13ce66"></el-switch>
+        </el-form-item> -->
         <template slot-scope="scope">
-          <el-switch
-            @change="anniu(scope.row)"
-            v-model="scope.row.switch"
-            active-color="#13ce66"
-          >
-          </el-switch>
+          <!-- {{ scope.row.quickType == 'true' ? '可用' : '不可用 ' }} -->
+
+           <el-switch @change="setUse(scope.row,$event)" v-model="scope.row.quickType" active-color="#13ce66"></el-switch>
         </template>
       </el-table-column>
     </el-table>
@@ -52,36 +48,104 @@
 </template>
 
 <script>
+import routesTarget from "../resource/json/routes.json";
+import apiSend from "@/api/controls/httpRequest.js";
+import {createNamespacedHelpers } from "vuex";
+const { mapState,mapMutations} = createNamespacedHelpers("worker");
+const {setRoutes,setTabs} = mapMutations(["setRoutes","setTabs"]);
 export default {
   methods: {
+    setUse(row,e) {
+      // console.log(e,row);
+      // return;
+      row.quickType = row.quickType ? '1' : '0';
+      let params = {
+        functionalDescription: row.functionalDescription,
+        quickType: row.quickType,
+        shortcutIconBlob: row.shortcutIconBlob,
+        shortcutId: row.shortcutId,
+        shortcutKeyName: row.shortcutKeyName,
+        url: row.url
+      };
+      // console.log(params);
+      apiSend['quickUpdate']({
+        data: params
+      }).then(res => {
+        if (res.data.data.code == 0) {
+          // this.modalInfo.showModal = false;
+          // this.$message.success(res.data.data.msg);
+          this.getTable();
+        }
+      });
+    },
     headClass() {
       //表头居中显示
       return "text-align:center";
     },
-    anniu(scope) {
-      //   console.log(params);
-      //   params.row.switch = false;
-      //   console.log(params.row.switch);
-      console.log(scope.switch);
-      console.log(this.tableData);
-    },
-    tableRowClassName({ rowIndex }) {
-      if (rowIndex === 1) {
-        return "warning-row";
-      } else if (rowIndex === 3) {
-        return "success-row";
+    tableRowClassName({ row, rowIndex }) {
+      if (rowIndex % 2 != 0) {
+        return "warning-line";
       }
       return "";
     },
-    getDate(row) {},
-    initData() {
-      this.tableData.forEach((item, index) => {
-        item.id = index + 1;
+    // getDate(row) {},
+    getTable() {
+     let params = {
+        shortcutKeyName: "",
+        quickType: ''
+      };
+      apiSend.quickList({
+        data : params
+      }).then(res => {
+        // console.log(res)
+        res.data.data.list.forEach((item)=>{
+          item.quickType = item.quickType == '1';
+        })
+        this.tableData = res.data.data.list;
       });
+      // this.tableData.forEach((item, index) => {
+      //   item.id = index + 1;
+      // });
     },
+    toPage(e) {
+      let route = e.currentTarget.getAttribute("data-route");
+      console.log(route);
+      this.updateRoutes(route);
+    },
+    updateRoutes(route, params = {}) {
+      let currentRoute = routesTarget.routes.filter(
+        item => item.route == route
+      );
+      let repObj = {
+        path: "/moreMenu/" + route
+      };
+      if (params.t) {
+        repObj["query"] = {
+          t: params.t
+        };
+      }
+      console.log(this.editableTabs);
+      if (this.editableTabs.some(item => item.route == route)) {
+        setTabs.call(this, currentRoute[0].name);
+         this.$router.replace(repObj);
+        return;
+      }
+      let arr = this.editableTabs.concat(currentRoute);
+      let newRoutes = Array.from(new Set(arr));
+      setTabs.call(this, currentRoute[0].name);
+      setRoutes.call(this, newRoutes);
+      this.$router.replace(repObj);
+    }
   },
   mounted() {
-    this.initData();
+    this.getTable();
+  },
+  computed: {
+    editableTabs() {
+      console.log(this.$store.state.worker.workRoutes)
+      return this.$store.state.worker.workRoutes;
+    },
+    ...mapState(['userInfo'])
   },
   data() {
     return {
@@ -90,35 +154,35 @@ export default {
           date: "创建活动",
           name: "创建活动",
           address: "快捷键创建活动，跳转到营销活动创建界面",
-          switch: true,
+          switch: true
         },
         {
           date: "创建客群",
           name: "创建客群",
           address: "快捷键创建客群，跳转到营销客群创建界面",
-          switch: true,
+          switch: true
         },
         {
           date: "创建画像",
           name: "创建画像",
           address: "快捷键创建画像，跳转到营销画像创建界面",
-          switch: true,
+          switch: true
         },
         {
           date: "创建标签",
           name: "创建标签",
           address: "快捷键创建标签，跳转到营销标签创建界面",
-          switch: true,
+          switch: true
         },
         {
           date: "创建场景",
           name: "创建场景",
           address: "快捷键创建场景，跳转到营销场景创建界面",
-          switch: true,
-        },
-      ],
+          switch: true
+        }
+      ]
     };
-  },
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -139,7 +203,7 @@ body {
     margin-bottom: 35px;
   }
 }
-.page-wrapper {
+.administration-wrapper {
   /deep/.el-table {
     thead {
       th {

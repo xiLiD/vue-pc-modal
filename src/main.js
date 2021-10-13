@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from "vue";
 import App from "./App";
+// import './permission.js';
+// import './permissionIop.js';
 import router from "./router";
 import store from "./store/index";
 import "@/utils/index";
@@ -14,7 +16,7 @@ import "@/styles/reset.css"
 import "@/styles/common.css";
 import "@/styles/index.css";
 import VueLazyload from 'vue-lazyload'
-// import './permission.js';
+
 Vue.use(VueLazyload);
 Vue.use(element); // global css
 Vue.config.productionTip = false;

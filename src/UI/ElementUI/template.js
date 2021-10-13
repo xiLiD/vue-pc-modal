@@ -152,7 +152,7 @@ const element = {
                     lock: true,
                     text: "数据加载需要几分钟，请耐心等待！",
                     spinner: "el-icon-loading",
-                    background: "rgba(0, 0, 0, 0.7)"
+                    background: "rgba(255, 255, 255, 0.8)"
                 });
             },
             close: function () {
@@ -160,7 +160,7 @@ const element = {
                     lock: true,
                     text: "数据加载需要几分钟，请耐心等待！",
                     spinner: "el-icon-loading",
-                    background: "rgba(0, 0, 0, 0.7)"
+                    background: "rgba(255, 255, 255, 0.8)"
                 });
                 loadingInstance.close();
             }

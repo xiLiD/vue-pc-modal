@@ -1,12 +1,11 @@
 <template>
   <div
     :class="['tree-box', dialogVisible ? 'show-tree' : '']"
-    @click="dialogVisible = false"
   >
     <div :class="['tree-unit']">
       <div class="tree-title">地域与目录树选择</div>
       <div class="close-icon">
-        <i class="el-icon-close"></i>
+        <i class="el-icon-close" @click="dialogVisible = false"></i>
       </div>
       <!-- <div class="tree-menu">
         <el-select v-model="currentItem" placeholder="请选择" size="mini">

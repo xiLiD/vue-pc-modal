@@ -7,20 +7,20 @@
       <el-form :inline="true">
         <el-form-item label="活动名称">
           <el-input
-            v-model="searchInline.name"
+            v-model="searchInline.pgName"
             size="mini"
             placeholder="请输入名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="申请人">
+        <el-form-item label="审批人">
           <el-input
-            v-model="searchInline.user"
+            v-model="searchInline.creator"
             size="mini"
             placeholder="请输入名称"
           ></el-input>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="searchInline.status" size="mini">
+          <el-select v-model="searchInline.state" size="mini">
             <el-option
               v-for="item in statusList"
               :key="item.value"
@@ -32,62 +32,100 @@
         </el-form-item>
         <el-form-item label="申请时间">
           <el-date-picker
-            v-model="searchInline.time"
+            v-model="searchInline.createDate"
             type="date"
             placeholder="选择日期"
             size="mini"
+            value-format="yyyyMMdd"
+            format="yyyy-MM-dd"
           >
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" type="primary">查询</el-button>
-          <el-button size="mini" type="info" plain>清空</el-button>
+          <el-button size="mini" type="primary" @click="getTable">查询</el-button>
+          <el-button size="mini" type="info" plain @click="setEmpty">清空</el-button>
         </el-form-item>
       </el-form>
       <!-- <el-button type="danger" size="mini">批量删除</el-button> -->
       <el-table :data="tableData" style="width: 100%" row-key="codeKey" border>
         <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
-        <el-table-column label="活动编码" prop="city" align="center" />
-        <el-table-column label="活动名称" prop="cnty" align="center" />
-        <el-table-column label="当前审批人" prop="grid" align="center" />
-        <el-table-column label="申请人" prop="order" align="center" />
-        <el-table-column label="申请时间" prop="population" align="center" />
-        <el-table-column label="当前节点" prop="popuNum1" align="center" />
+      <el-table-column label="活动编码" prop="pdId" align="center" />
+      <el-table-column label="活动名称" prop="pgName" align="center" />
+      <el-table-column label="当前审批人" prop="creator" align="center" />
+      <el-table-column label="申请时间" prop="createDate" align="center" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope" >
+          <span :style="{color : statusColor(scope.row.state)}">{{getStatus(scope.row.state)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="当前节点" prop="value" align="center" />
       </el-table>
 
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page="queryData.pageNo"
         :page-sizes="[10, 20, 50, 100]"
-        :page-size="10"
+        :page-size="queryData.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
-      >
-      </el-pagination>
+        :total="queryData.total"
+      ></el-pagination>
     </div>
   </div>
 </template>
 <script>
+import apiSend from "@/api/controls/httpRequest.js";
 export default {
   data() {
     return {
       searchInline: {
-        name: "",
-        user: "",
-        status: "",
-        time: "",
+        pgName: "",
+        creator: "",
+        state: "",
+        createDate: "",
       },
       statusList: [
         {
-          label: "状态1",
-          value: 1,
+          label: "发布失败",
+          value: 'publishFailed',
+          color : '#F56C6C'
         },
         {
-          label: "状态2",
-          value: 2,
+          label: "待审批",
+          value: 'waitApproval',
+          color : '#E6A23C'
+        },
+        {
+          label: "拒绝",
+          value: 'reject',
+          color : '#C0C4CC'
+        },
+        {
+          label: "停止",
+          value: 'stop',
+          value : '#E6A23C'
+        },
+        {
+          label: "暂停",
+          value: 'suspend',
+          value : '#E6A23C'
+        },
+        {
+          label: "已发布",
+          value: 'published',
+          value : '#67C23A'
+        },
+        {
+          label: "草稿",
+          value: 'draft',
+          value : '#909399'
         },
       ],
+      queryData: {
+        total: 0,
+        pageSize: 10,
+        pageNo: 1
+      },
       tableData: [],
       currentPage: 1,
     };
@@ -96,59 +134,50 @@ export default {
     this.getTable();
   },
   methods: {
+    setEmpty(){
+        this.searchInline = {
+        pgName: "",
+        creator: "",
+        state: "",
+        createDate: "",
+      };
+    },
     toPages() {},
+    getStatus(value){
+      let current = this.statusList.find((item)=> item.value == value)
+      return current ? current.label : ''
+    },
+    statusColor(value){
+      let current = this.statusList.find((item)=> item.value == value)
+      return current ? current.color : ''
+    },
     getTable() {
-      let data = [
-        {
-          city: "活动编码1",
-          cnty: "活动名称1",
-          grid: "李雷",
-          order: "王XX",
-          population: "2021/3/20",
-          popuNum1: "集运审批",
+      let params = {
+        pagemap: {
+          ...this.queryData
         },
-        {
-          city: "活动编码1",
-          cnty: "活动名称1",
-          grid: "李雷",
-          order: "王XX",
-          population: "2021/3/20",
-          popuNum1: "集运审批",
+        siftmap: {
+          pgName : this.searchInline.pgName,
+          creator : this.searchInline.creator,
+          state : this.searchInline.state,
+          createDate : this.searchInline.createDate,
+          staffId : this.$store.state.worker.userInfo.staffId
         },
-        {
-          city: "活动编码1",
-          cnty: "活动名称1",
-          grid: "李雷",
-          order: "王XX",
-          population: "2021/3/20",
-          popuNum1: "集运审批",
-        },
-        {
-          city: "活动编码1",
-          cnty: "活动名称1",
-          grid: "李雷",
-          order: "王XX",
-          population: "2021/3/20",
-          popuNum1: "集运审批",
-        },
-        {
-          city: "活动编码1",
-          cnty: "活动名称1",
-          grid: "李雷",
-          order: "王XX",
-          population: "2021/3/20",
-          popuNum1: "集运审批",
-        },
-      ];
-
-      this.tableData = data;
-      console.log(this.tableData);
+      };
+      console.log(params)
+      apiSend.NotApproval({ data: params }).then(res => {
+        this.tableData = res.data.data.page.list;
+        this.queryData.total = res.data.data.page.totalCount;
+      });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.queryData.pageNo = 1;
+      this.queryData.pageSize = val;
+      this.getTable();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.queryData.pageNo = val;
+      this.getTable();
     },
   },
 };

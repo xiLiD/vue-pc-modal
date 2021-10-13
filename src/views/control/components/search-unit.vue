@@ -2,11 +2,16 @@
   <el-dialog
     title="请选择报表需要展现的字段"
     :visible.sync="dialogVisible"
-    width="70%"
+    width="50%"
   >
     <!-- <span>这是一段信息</span> -->
     <div class="check-box">
       <el-checkbox-group v-model="checkList">
+        <template slot="slot-scope">
+          <div>
+            归档日期:
+          </div>
+        </template>
         <el-checkbox
           v-for="(checkItem, checkIndex) in getMenu"
           :label="checkItem"
@@ -27,20 +32,18 @@ export default {
     return {
       dialogVisible: false,
       checkList: [
-        "日期",
-        "月份",
+        // "日期",
+        // "月份",
         "地市",
-        "区县",
-        "网格",
-        "客户等级",
-        "受理渠道类型",
-        "一级目录",
-        "二级目录",
-        "三级目录",
-        "四级目录",
-        "五级目录",
-        "六级目录",
-        "七级目录",
+        // "客户等级",
+        // "受理渠道类型",
+        // "一级目录",
+        // "二级目录",
+        // "三级目录",
+        // "四级目录",
+        // "五级目录",
+        // "六级目录",
+        // "七级目录",
       ],
       checkMenu: [
         {
@@ -127,14 +130,15 @@ export default {
       }
       // arr = arr.concat([
       //   {
-      //     key: "count",
+      //     key: "cmplnNum",
       //     value: "工单量",
       //   },
       //   {
-      //     key: "num",
+      //     key: "avgDealDur",
       //     value: "平均处理时长",
       //   },
       // ]);
+      console.log(arr)
       this.$emit("getSearch", arr);
       this.setShow(false);
     },

@@ -8,7 +8,8 @@ export default {
       "redirect": ""
     }],
     tabs: '1',
-    token: window.sessionStorage.getItem('token') || 'OGhubiao'
+    token: window.sessionStorage.getItem('token') || 'OGhubiao',
+    userInfo : JSON.parse(window.sessionStorage.getItem('userInfo')) || {},
   },
   mutations: {
     setRoutes(state, value) {
@@ -22,7 +23,15 @@ export default {
     setTabs(state, value) {
       state.tabs = value;
       sessionStorage.setItem('tabs', value)
-    }
+    },
+    setUserInfo(state, userInfo) {
+      state.userInfo = userInfo
+      window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    },
   },
-  actions: {}
+  actions: {
+    changeUserInfo(context, value) {
+      context.commit('setUserInfo', value)
+    },
+  }
 }

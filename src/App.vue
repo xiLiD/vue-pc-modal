@@ -131,4 +131,11 @@ export default {
   left: 0;
   // padding-bottom: 10px;
 }
+  .el-pagination {
+    margin-top: 10px;
+    text-align: center;
+  }
+  //  body {
+  //    overflow: initial !important;
+  //  }
 </style>

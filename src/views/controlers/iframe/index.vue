@@ -34,7 +34,7 @@ export default {
       return window.innerWidth - 20 - 20 + "px";
     },
     getHeight() {
-      return window.innerHeight - 61 + "px";
+      return window.innerHeight - 71 + "px";
     },
   }),
   mounted() {

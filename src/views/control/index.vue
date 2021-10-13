@@ -15,17 +15,25 @@
                 ></el-checkbox>
               </el-checkbox-group>
             </div>
-          </div> -->
+          </div>-->
           <div class="control-left-center">
             <div class="center-title">
-              <label for="">自动筛选维值</label>
-              <!-- <el-checkbox
-                :indeterminate="isIndeterminate"
-                v-model="checkAll"
-                size="mini"
-                @change="handleCheckAllChange"
-                >全选</el-checkbox
-              > -->
+              <label for>筛选维值</label>
+            </div>
+            <el-tree
+              :data="menuTop"
+              class="main-tree no-tree"
+              node-key="id"
+              ref="tree"
+              lazy
+              show-checkbox
+              :load="loadTop"
+              highlight-current
+              :props="defaultProps"
+              @node-click="treeClick"
+            ></el-tree>
+            <div class="center-title b-tit">
+              <!-- <label for="">自动筛选维值</label> -->
             </div>
             <el-tree
               :data="menuList"
@@ -38,8 +46,7 @@
               highlight-current
               :props="defaultProps"
               @node-click="treeClick"
-            >
-            </el-tree>
+            ></el-tree>
             <!-- <div class="search-type">
               <el-form>
                 <el-form-item>
@@ -64,7 +71,7 @@
                   </el-radio-group>
                 </el-form-item>
               </el-form>
-            </div> -->
+            </div>-->
           </div>
         </div>
       </el-col>
@@ -78,21 +85,42 @@
               ref="addruleFormref"
             >
               <div class="menu-left">
-                <el-form-item label="统计日期" label-width="80px">
-                  <el-date-picker
+                <el-form-item label="归档时间" label-width="80px">
+                  <!-- <el-date-picker
                     v-model="formInline.date"
                     type="daterange"
                     range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
                     format="yyyy-MM-DD"
                     value-format="yyyy-MM-DD"
                     size="mini"
                     :editable="false"
-                  >
+                  ></el-date-picker> -->
+
+                  <el-date-picker
+                    v-model="formInline.date"
+                    value-format="yyyyMMdd"
+                    format="yyyy-MM-dd"
+                    type="daterange"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    size="small">
                   </el-date-picker>
+
                 </el-form-item>
-                <el-form-item label="投诉内容">
+                <el-form-item label="受理时间" label-width="80px">
+                  <el-date-picker
+                    v-model="formInline.dealTime"
+                    type="date"
+                    value-format="yyyyMMdd"
+                    format="yyyy-MM-dd"
+                    size="mini"
+                    :editable="false"
+                  ></el-date-picker>
+                </el-form-item>
+                <!-- <el-form-item label="投诉内容">
                   <el-input
                     placeholder="请输入内容"
                     v-model="formInline.content"
@@ -100,18 +128,16 @@
                   >
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                   </el-input>
-                </el-form-item>
+                </el-form-item>-->
 
-                <el-form-item label="" label-width="80px">
-                  <el-button type="primary" @click="showSearch" size="mini"
-                    >查询</el-button
-                  >
+                <el-form-item label label-width="80px">
+                  <el-button type="primary" @click="showSearch" size="mini">查询</el-button>
                   <!-- <el-button type="warning" @click="showImport" size="mini"
                     >导入</el-button
                   >
                   <el-button type="success" @click="getExport" size="mini"
                     >导出</el-button
-                  > -->
+                  >-->
                 </el-form-item>
               </div>
             </el-form>
@@ -121,7 +147,6 @@
               :data="tableData"
               style="width: 100%"
               row-key="codeKey"
-              height="500px"
               :row-class-name="tableRowClassName"
               border
             >
@@ -137,7 +162,7 @@
                 <template>
                   <a href="#">点击前往</a>
                 </template>
-              </el-table-column> -->
+              </el-table-column>-->
             </el-table>
             <el-pagination
               background
@@ -172,7 +197,7 @@ export default {
     SearchComplete,
     SearchUnit,
     SearchTree,
-    ImportComplete,
+    ImportComplete
   },
   data() {
     var data = [
@@ -181,7 +206,7 @@ export default {
         keyPath: "findCntyVo",
         keyTarget: {
           id: "upChnlType",
-          name: "upChnlTypeName",
+          name: "upChnlTypeName"
         },
         params: {
           cityCode: "",
@@ -189,67 +214,67 @@ export default {
           cntyCode: "",
           cntyName: "",
           gridCode: "",
-          gridName: "",
+          gridName: ""
         },
         id: 1,
-        children: [],
+        children: []
       },
       {
         label: "客户等级",
         keyPath: "findGsmLvlInfo",
         keyTarget: {
           id: "gsmLvlCode",
-          name: "gsmLvlName",
+          name: "gsmLvlName"
         },
         params: {
           dataSrc: "",
           gsmLvlCode: "",
-          gsmLvlName: "",
+          gsmLvlName: ""
         },
         id: 2,
-        children: [],
+        children: []
       },
       {
-        label: "受理渠道类型",
+        label: "受理渠道",
         keyPath: "findSatisfatChnlInfo",
         keyTarget: {
           id: "upChnlType",
-          name: "upChnlTypeName",
+          name: "upChnlTypeName"
         },
         params: {
           chnlType: "",
           chnlTypeName: "",
           dataSrc: "",
           upChnlType: "",
-          upChnlTypeName: "",
+          upChnlTypeName: ""
         },
         id: 3,
-        children: [],
+        children: []
       },
       {
-        label: "是否抱怨单",
+        label: "建单/非建单",
         id: 4,
         children: [
           {
             id: 1001,
-            label: "是",
+            label: "建单",
             children: [],
-            foreFather: "是否抱怨单",
+            foreFather: "建单/非建单"
           },
           {
             id: 1002,
-            label: "否",
+            label: "非建单",
             children: [],
-            foreFather: "是否抱怨单",
-          },
-        ],
+            foreFather: "建单/非建单"
+          }
+        ]
       },
       {
         label: "三级业务类型",
         keyPath: "findServiceTypeInfo",
         keyTarget: {
           id: "l1BusiTypeCode",
-          name: "l1BusiTypeName",
+          name: "l1BusiTypeName"
         },
         params: {
           busiTypeCode: "",
@@ -258,32 +283,59 @@ export default {
           l1BusiTypeCode: "",
           l1BusiTypeName: "",
           l2BusiTypeCode: "",
-          l2BusiTypeName: "",
+          l2BusiTypeName: ""
         },
         id: 5,
-        children: [],
+        children: []
       },
       {
         label: "七级目录树",
         keyPath: "findSevenCatalogInfo",
         keyTarget: {
           id: "upChnlType",
-          name: "upChnlTypeName",
+          name: "upChnlTypeName"
         },
         id: 6,
         children: [],
         params: {
           busiTypeCode: "",
           busiTypeName: "",
-          parentId: "9999",
-        },
-      },
+          parentId: "9999"
+        }
+      }
     ];
-    data.forEach((item) => {
+    data.forEach(item => {
       item.foreFather = item.label;
     });
-    var leftMenu = data.slice();
+    var leftMenu = data
+      .slice()
+      .filter(item => item.label != "地域" && item.label != "七级目录树");
+    var topMenu = data
+      .slice()
+      .filter(item => item.label == "地域" || item.label == "七级目录树");
+    
+    const getCurrentDate = () => {
+      let curDate = new Date();
+      let year = curDate.getFullYear();
+      let month = curDate.getMonth() + 1;
+      let strMonth = month > 9 ? month : '0' + month;
+      let strLast = ''
+      // let day = curDate.getDate() > 9 ? curDate.getDate() : '0' + curDate.getDate();
+      if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
+        strLast = 31
+      }else if(month == 2){
+        strLast = year % 4 == 0 ? 29 : 28;
+      }else {
+        strLast = 30
+      }
+      let startDate = `${year}${month}01`;
+      let endDate = `${year}${month}${strLast}`;
+      return [startDate,endDate]
+    }
+    var currentDate = getCurrentDate();
+    // console.log(topMenu,leftMenu)
     return {
+      menuTop: topMenu,
       menuList: leftMenu,
       areaList: data,
       defaultProps: {
@@ -291,11 +343,12 @@ export default {
         label: "label",
         foreFather: "foreFather",
         isLeaf: (data, node) => {
-          console.log(!node.data);
-          if (!node.data.children) {
-            return true;
-          }
-        },
+          // console.log(!node.data);
+          // if (!node.data.children) {
+          //   return true;
+          // }
+          return false;
+        }
       },
       tableData: [],
       menuClassId: "",
@@ -303,29 +356,30 @@ export default {
       productData: [],
       expands: [],
       formInline: {
-        date: "",
+        date: currentDate,
         content: "",
+        dealTime: ""
       },
       filterData: {
         operate: [],
         area: [],
         search: "",
-        searchType: "",
+        searchType: ""
       },
       searchTypeList: ["10086短信", "10086人工", "10086热线"],
       operateList: [
         {
           key: 10,
-          value: "报表展示字段",
+          value: "报表展示字段"
         },
         {
           key: 11,
-          value: "筛选制定维值",
-        },
+          value: "筛选制定维值"
+        }
       ],
       props: {
         children: "children",
-        label: "label",
+        label: "label"
       },
       allCheck: [],
       isIndeterminate: false,
@@ -334,9 +388,9 @@ export default {
       queryData: {
         total: 1,
         pageSize: 10,
-        pageNo: 1,
+        pageNo: 1
       },
-      currentKeys: [],
+      currentKeys: []
     };
   },
   computed: {
@@ -346,11 +400,19 @@ export default {
       },
       set(val) {
         return val;
-      },
-    },
+      }
+    }
   },
   mounted() {
-    this.fields = this.setFields(fields);
+    let that = this;
+    that.fields = this.setFields(fields);
+    window.onresize = function() {
+      // console.log(window.innerHeight)
+      that.getHeight = window.innerHeight - 40 - 50 - 15 - 12 + "px";
+    };
+    // this.getSearch(this.currentKeys);
+    this.$refs["search-unit"].getSearch()
+    // this.formInline.date = this.getCurrentDate();
   },
   methods: {
     getColumnWidth(row) {
@@ -373,20 +435,19 @@ export default {
         for (var j = 1; j < a.length; j++) {
           o = o + a[j].slice(0, 1).toUpperCase() + a[j].slice(1);
         }
-        console.log(o);
+        // console.log(o);
         list.push({
           key: o,
-          value: current[i],
+          value: current[i]
         });
       }
-      console.log(list);
       list = list.concat([
         {
-          key: "countres",
+          key: "cmplnNum",
           value: "工单量",
         },
         {
-          key: "sumres",
+          key: "avgDealDur",
           value: "平均处理时长",
         },
       ]);
@@ -407,7 +468,7 @@ export default {
       this.$refs["import-complete"].setShow(true);
     },
     setChildren(arr, target, requestArr) {
-      arr.forEach((item) => {
+      arr.forEach(item => {
         if (item.label == target.label) {
           item.children = requestArr;
           item.foreFather = target.foreFather;
@@ -451,7 +512,7 @@ export default {
       return arr;
     },
     treeClick(target, node, current) {
-      console.log(target);
+      // console.log(target);
       if (
         target.keyPath == "findCntyVo" ||
         target.keyPath == "findSevenCatalogInfo"
@@ -479,12 +540,12 @@ export default {
         return;
       }
       apiSend[target.keyPath]({ data: target.params, showLoading: false })
-        .then((res) => {
+        .then(res => {
           let arr = this.setList(res.data.data);
           let newArr = this.setChildren(this.areaList, target, arr);
-          console.log(newArr);
+          // console.log(newArr);
         })
-        .catch((err) => {});
+        .catch(err => {});
     },
     showSearch() {
       this.$refs["search-unit"].setShow(true);
@@ -493,10 +554,43 @@ export default {
       this.getSearch(this.currentKeys);
     },
     getChange(e) {
-      console.log(e);
+      // console.log(e);
       this.queryData.pageNo = 1;
       this.queryData.pageSize = e;
       this.getSearch(this.currentKeys);
+    },
+    
+    getValidate(formatStr) {
+      var str = formatStr;
+      var Week = ["日", "一", "二", "三", "四", "五", "六"];
+
+      str = str.replace(/yyyy|YYYY/, this.getFullYear());
+      str = str.replace(
+        /yy|YY/,
+        this.getYear() % 100 > 9
+          ? (this.getYear() % 100).toString()
+          : "0" + (this.getYear() % 100)
+      );
+
+      str = str.replace(
+        /MM/,
+        this.getMonth() > 9 ? this.getMonth().toString() : "0" + this.getMonth()
+      );
+      str = str.replace(/M/g, this.getMonth());
+
+      str = str.replace(/w|W/g, Week[this.getDay()]);
+
+      str = str.replace(
+        /dd|DD/,
+        this.getDate() > 9 ? this.getDate().toString() : "0" + this.getDate()
+      );
+      str = str.replace(/d|D/g, this.getDate());
+
+      str = str.replace(
+        /hh|HH/,
+        this.getHours() > 9 ? this.getHours().toString() : "0" + this.getHours()
+      );
+      return str;
     },
     getSearch(arr) {
       var tree = this.$refs["tree"].getCheckedNodes();
@@ -507,9 +601,16 @@ export default {
       for (var i in arr) {
         a[arr[i]["key"]] = arr[i]["value"];
       }
-      console.log(a);
+      // console.log(a);
       this.fields = this.setFields(a);
       let queryData = this.queryData;
+      let field = arr
+        .map(item => item.key)
+        .reduce((total, current) => {
+          return total ? total + "," + current : current;
+        }, "");
+      // console.log(this.formInline);
+      // return;
       var params = {
         busiType1Code: [],
         busiType2Code: [],
@@ -531,33 +632,35 @@ export default {
         endDate: this.formInline.date ? this.formInline.date[1] : "",
         statisMonth: "",
         upChnlType: [],
-        fields: arr.map((item) => item.key),
+        field: field,
+        fields: arr.map(item => item.key),
         ...queryData,
+        dealTime: this.formInline.dealTime
       };
-      console.log(allTree);
+      // console.log(allTree);
       var query = this.fillParams(params, allTree);
-      console.log(query);
+      // console.log(query);
       apiSend["findIndexInfo"]({ data: query })
-        .then((res) => {
-          console.log(this.tableData);
+        .then(res => {
+          // console.log(this.tableData);
           this.tableData = res.data.data.records;
           this.queryData.pageNo = res.data.data.current;
           this.queryData.total = res.data.data.total;
           this.queryData.size = res.data.data.size;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     },
     fillParams(params, arr) {
       let query = JSON.parse(JSON.stringify(params));
-      arr.forEach((item) => {
+      arr.forEach(item => {
         if (item.foreFather == "地域") {
           query["cityCode"].push(item.value);
         }
       });
       arr = this.sortArea(arr);
-      arr.forEach((item) => {
+      arr.forEach(item => {
         for (var i in query) {
           if (Object.prototype.hasOwnProperty.call(item, i)) {
             if (item[i]) {
@@ -573,7 +676,7 @@ export default {
       return query;
     },
     setParents(key, value, arr) {
-      arr.forEach((item) => {
+      arr.forEach(item => {
         item[key] = value;
         for (var i in item) {
           if (item[i] && (i.indexOf("Code") != -1 || i.indexOf("Type") != -1)) {
@@ -591,7 +694,7 @@ export default {
     },
     sortArea(arr) {
       var newArr = arr;
-      newArr.forEach((item) => {
+      newArr.forEach(item => {
         if (item.value) {
           item.children = this.setParents(
             "parentId",
@@ -621,7 +724,7 @@ export default {
     },
     removalData(arr) {
       var newArr = arr.filter(
-        (item) =>
+        item =>
           (item.foreFather !== null && item.label !== "是否抱怨单") ||
           item.foreFather === "地域"
       );
@@ -630,7 +733,7 @@ export default {
       // 筛选 是否抱怨单 存在 是 和 否 两个 则 过滤该筛选条件
       let filterArr = [];
       var parentsArr = [];
-      newArr.forEach((item) => {
+      newArr.forEach(item => {
         if (item.value) {
           parentsArr.push(item.value);
         }
@@ -643,7 +746,7 @@ export default {
       });
 
       parentsArr = Array.from(new Set(parentsArr));
-      newArr.filter((item) => {
+      newArr.filter(item => {
         for (var i in item) {
           if (
             item[i] &&
@@ -655,15 +758,15 @@ export default {
         }
       });
 
-      newArr = newArr.filter((item) => {
+      newArr = newArr.filter(item => {
         if (parentsArr.length == 0) {
           return true;
         } else {
           return !parentsArr.includes(item.parentId);
         }
       });
-      console.log(newArr);
-      newArr = newArr.filter((item) => {
+      // console.log(newArr);
+      newArr = newArr.filter(item => {
         if (item.label == "是" || item.label == "否") {
           if (filterArr.includes("是") && filterArr.includes("否")) {
             return item.foreFather != "是否抱怨单";
@@ -672,7 +775,7 @@ export default {
         }
         return true;
       });
-      console.log(newArr);
+      // console.log(newArr);
       return newArr;
     },
     setId(arr) {
@@ -687,16 +790,24 @@ export default {
       return arr;
     },
     handleCheckAllChange(val) {
-      let newArr = this.areaList.map((item) => {
+      let newArr = this.areaList.map(item => {
         return item.id;
       });
       let arr = val ? newArr : [];
       this.$refs.tree.setCheckedKeys(arr);
       this.isIndeterminate = false;
     },
+    loadTop(node, resolve) {
+      if (node.level === 0) {
+        return resolve(this.menuTop);
+      }
+      setTimeout(() => {
+        resolve(node.data.children);
+      }, 500);
+    },
     loadNode(node, resolve) {
       if (node.level === 0) {
-        return resolve(this.areaList);
+        return resolve(this.menuList);
       }
       setTimeout(() => {
         resolve(node.data.children);
@@ -712,14 +823,14 @@ export default {
       this.$message.warning("暂未开发！");
     },
     getChild(arr) {
-      arr.forEach((item) => {
+      arr.forEach(item => {
         if (Object.prototype.hasOwnProperty.call(item, "child")) {
           item.child = this.getChild(item.child);
         }
       });
-      return arr.filter((item) => item.isShow);
-    },
-  },
+      return arr.filter(item => item.isShow);
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -816,9 +927,13 @@ export default {
       letter-spacing: 3px;
       font-size: 12px;
       border-bottom: 1px solid #ddd;
+      // margin: 10px 0;
       label {
         margin-right: 15px;
       }
+    }
+    .b-tit {
+      margin-top: 10px;
     }
     .el-checkbox-group {
       display: flex;
@@ -876,15 +991,22 @@ export default {
   display: none;
 }
 /deep/
-  .main-tree
-  > .el-tree-node:nth-child(1)
-  > .el-tree-node__content
-  .el-tree-node__expand-icon,
-/deep/
-  .main-tree
-  > .el-tree-node:nth-child(6)
+  .no-tree
+  > .el-tree-node
   > .el-tree-node__content
   .el-tree-node__expand-icon {
   opacity: 0;
+}
+// /deep/
+//   .main-tree
+//   > .el-tree-node:nth-child(6)
+//   > .el-tree-node__content
+//   .el-tree-node__expand-icon {
+//   opacity: 0;
+// }
+
+.el-table td,
+.el-table th.is-leaf {
+  border-right: 1px solid #fff;
 }
 </style> 

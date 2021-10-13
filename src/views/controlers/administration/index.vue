@@ -1,72 +1,46 @@
 <template id="administration">
-  <div class="page-wrapper" style="padding: 10px">
+  <div class="administration-wrapper">
     <el-form :inline="true">
       <el-form-item label="快捷键名称">
-        <el-input
-          v-model="formInline.user"
-          placeholder="请输入名称"
-          size="mini"
-        ></el-input>
+        <el-input v-model="formInline.name" placeholder="请输入名称" size="mini"></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="formInline.region" placeholder="请选择" size="mini">
-          <el-option label="状态一" value="shanghai" size="mini"></el-option>
-          <el-option label="状态二" value="beijing" size="mini"></el-option>
+        <el-select v-model="formInline.type" placeholder="请选择" size="mini">
+          <el-option label="可用" :value="1" size="mini"></el-option>
+          <el-option label="不可用" :value="0" size="mini"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button class="buttons" type="primary" @click="onSubmit" size="mini">
-          查询
-        </el-button>
+        <el-button class="buttons" type="primary" @click="setAdd" size="mini" v-if="userInfo.isAdmin">添加快捷键</el-button>
+        <el-button class="buttons" type="primary" @click="getTable" size="mini">查询</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
-    <el-table
-      border
-      class="tablestyle"
-      :data="tableData"
-      style="width: 100%"
-      size="mini"
-    >
-      <el-table-column prop="date" label="快捷图标" width="150" align="center">
+    <el-table border class="tablestyle" :data="tableData" style="width: 100%" size="mini" :row-class-name="tableRowClassName">
+      <el-table-column label="快捷图标" width="150" align="center">
         <template slot-scope="scope">
-          <div @click.prevent="getDate(scope.row)" ref="button">
-            <el-button size="mini" plain>
+          <div ref="button">
+            <el-button size="mini" type="primary" plain>
               <!-- @click.native 组件中点击事件用@click.native -->
-              {{ scope.row.date }}
+              {{ scope.row.shortcutIconBlob }}
             </el-button>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="name"
-        label="快捷键名称"
-        width="150"
-        align="center"
-      >
+      <el-table-column prop="shortcutKeyName" label="快捷键名称" width="150" align="center"></el-table-column>
+      <el-table-column prop="functionalDescription" label="功能描述" width="300" align="center"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="120" align="center"></el-table-column>
+      <el-table-column prop="updateTime" label="修改时间" width="180" align="center"></el-table-column>
+      <el-table-column label="状态" width="120" align="center">
+        <template slot-scope="scope">
+          <!-- {{ scope.row.quickType == 'true' ? '可用' : '不可用 ' }} -->
+          <el-switch @change="setUse(scope.row,$event)" v-model="scope.row.quickType" active-color="#13ce66"></el-switch>
+        </template>
       </el-table-column>
-      <el-table-column
-        prop="address"
-        label="功能描述"
-        width="300"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="time" label="创建时间" width="120" align="center">
-      </el-table-column>
-      <el-table-column
-        prop="timeout"
-        label="修改时间"
-        width="180"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column prop="state" label="状态" width="120" align="center">
-      </el-table-column>
-      <el-table-column prop="operation" label="操作" width="120" align="center">
-        <template>
-          <el-button type="primary" size="mini">修改</el-button>
-          <el-button type="danger" size="mini">删除</el-button>
+      <el-table-column label="操作" width="220" align="center" v-if="userInfo.isAdmin">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="setUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" size="mini" @click="deleteClick(scope.row)">删除</el-button>
         </template>
         <!-- <a href="#">修改</a> <a href="#">删除</a> -->
       </el-table-column>
@@ -75,118 +49,129 @@
     <!-- <el-divider direction="vertical"></el-divider> -->
 
     <!-- <el-divider content-position="right"></el-divider> -->
-    <div class="formbottom">
-      <div class="spanfont">新建/修改快捷键导航</div>
-      <el-form
-        :inline="true"
-        :model="formInline"
-        class="form-inline-search formbottom"
-        size="mini"
-      >
-        <!-- <el-divider></el-divider> -->
-        <el-form-item label="快捷键名称">
-          <el-input
-            v-model="formbottom.user"
-            placeholder="请输入名称"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="功能描述">
-          <el-input
-            class="description"
-            v-model="formbottom.content"
-            placeholder="请输入描述内容"
-            type="textarea"
-            rows="3"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="状态" class="state">
-          <el-select
-            v-model="formbottom.region"
-            placeholder="请选择"
-            size="mini"
-          >
-            <el-option label="状态一" value="shanghai"></el-option>
-            <el-option label="状态二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="buttonb" @click="onSubmit">确认</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+
+    <el-dialog :title="modalInfo.title" :visible.sync="modalInfo.showModal" width="40%">
+      <div class="formbottom">
+        <!-- <div class="spanfont">新建/修改快捷键导航</div> -->
+        <el-form
+          :inline="true"
+          :model="formInline"
+          class="form-inline-search formbottom"
+          size="mini"
+        >
+          <!-- <el-divider></el-divider> -->
+          <el-form-item label="快捷键图标名称" label-width="110px">
+            <el-input v-model="modalInfo.shortcutIconBlob" placeholder="请输入快捷键图标名称"></el-input>
+          </el-form-item>
+          <el-form-item label="快捷键名称" label-width="110px">
+            <el-input v-model="modalInfo.shortcutKeyName" placeholder="请输入名称"></el-input>
+          </el-form-item>
+          <el-form-item label="功能描述" label-width="110px">
+            <el-input
+              class="description"
+              v-model="modalInfo.functionalDescription"
+              placeholder="请输入描述内容"
+              type="textarea"
+              rows="3"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="跳转地址" label-width="110px">
+            <el-input v-model="modalInfo.url" placeholder="请输入跳转地址"></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="快捷键名称" label-width="100px">
+            <el-input v-model="modalInfo.name" placeholder="请输入名称"></el-input>
+          </el-form-item>-->
+          <!-- <el-form-item label="状态" label-width="110px">
+            <el-switch @change="setUse" v-model="modalInfo.quickType" active-color="#13ce66"></el-switch>
+          </el-form-item>-->
+          <el-form-item>
+            <el-button class="buttonb" type="primary" @click="submitClick">确认</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import apiSend from "@/api/controls/httpRequest.js";
 export default {
   data() {
     return {
-      formbottom: {
+      modalInfo: {
+        title: "修改快捷键导航",
+        showModal: false,
         user: "",
         region: "",
-        content: "",
+        content: ""
       },
       formInline: {
-        user: "",
-        region: "",
+        name: "",
+        type: ""
       },
       tableData: [
-        {
-          date: "创建活动",
-          name: "创建活动",
-          address: "快速创建活动，跳转到营销活动创建界面",
-          time: "20210301",
-          timeout: "",
-          state: "可用",
-          operation: "",
-        },
-        {
-          date: "创建客群",
-          name: "创建客群",
-          address: "快捷键创建客群，跳转到营销客群创建界面",
-          time: "20210301",
-          timeout: "",
-          state: "可用",
-          operation: "",
-        },
-        {
-          date: "创建画像",
-          name: "创建画像",
-          address: "快速创建画像，跳转到营销画像创建界面",
-          time: "20210301",
-          timeout: "20210401",
-          state: "可用",
-          operation: "",
-        },
-        {
-          date: "创建标签",
-          name: "创建标签",
-          address: "快速创建标签，跳转到营销标签创建界面",
-          time: "20210301",
-          timeout: "",
-          state: "可用",
-          operation: "",
-        },
-        {
-          date: "创建场景",
-          name: "创建场景",
-          address: "快速创建场景，跳转到营销场景创建界面",
-          time: "20210301",
-          timeout: "",
-          state: "可用",
-          operation: "",
-        },
-        {
-          date: "添加素材",
-          name: "添加素材",
-          address: "快速添加素材，跳转到添加素材界面",
-          time: "20210301",
-          timeout: "20210401",
-          state: "可用",
-          operation: "",
-        },
-      ],
+        // {
+        //   date: "创建活动",
+        //   name: "创建活动",
+        //   address: "快速创建活动，跳转到营销活动创建界面",
+        //   time: "20210301",
+        //   timeout: "",
+        //   state: "可用",
+        //   operation: ""
+        // },
+        // {
+        //   date: "创建客群",
+        //   name: "创建客群",
+        //   address: "快捷键创建客群，跳转到营销客群创建界面",
+        //   time: "20210301",
+        //   timeout: "",
+        //   state: "可用",
+        //   operation: ""
+        // },
+        // {
+        //   date: "创建画像",
+        //   name: "创建画像",
+        //   address: "快速创建画像，跳转到营销画像创建界面",
+        //   time: "20210301",
+        //   timeout: "20210401",
+        //   state: "可用",
+        //   operation: ""
+        // },
+        // {
+        //   date: "创建标签",
+        //   name: "创建标签",
+        //   address: "快速创建标签，跳转到营销标签创建界面",
+        //   time: "20210301",
+        //   timeout: "",
+        //   state: "可用",
+        //   operation: ""
+        // },
+        // {
+        //   date: "创建场景",
+        //   name: "创建场景",
+        //   address: "快速创建场景，跳转到营销场景创建界面",
+        //   time: "20210301",
+        //   timeout: "",
+        //   state: "可用",
+        //   operation: ""
+        // },
+        // {
+        //   date: "添加素材",
+        //   name: "添加素材",
+        //   address: "快速添加素材，跳转到添加素材界面",
+        //   time: "20210301",
+        //   timeout: "20210401",
+        //   state: "可用",
+        //   operation: ""
+        // }
+      ]
     };
+  },
+  computed:{
+    ...mapState(['userInfo']),
+  },
+  mounted() {
+    this.getTable();
   },
   methods: {
     onSubmit() {
@@ -199,7 +184,120 @@ export default {
       }
       return "";
     },
-  },
+    setUpdate(row) {
+      console.log(row);
+      row.quickType = row.quickType ? '1' : '0';
+      this.modalInfo = {
+        title: "修改快捷键导航",
+        showModal: true,
+        ...row
+      };
+      // this.modalInfo.showModal = true;
+    },
+    setAdd() {
+      this.modalInfo = {
+        title: "添加快捷键导航",
+        showModal: true,
+        shortcutKeyName: "",
+        functionalDescription: "",
+        url: "",
+        quickType: '0'
+      };
+    },
+    submitClick() {
+      let keyNames =
+        this.modalInfo.title == "添加快捷键导航" ? "quickAdd" : "quickUpdate";
+      let params = {
+        functionalDescription: this.modalInfo.functionalDescription,
+        quickType: this.modalInfo.quickType,
+        shortcutIconBlob: this.modalInfo.shortcutIconBlob,
+        shortcutId: this.modalInfo.shortcutId,
+        shortcutKeyName: this.modalInfo.shortcutKeyName,
+        url: this.modalInfo.url
+      };
+      console.log(params);
+      apiSend[keyNames]({
+        data: params
+      }).then(res => {
+        if (res.data.data.code == 0) {
+          this.modalInfo.showModal = false;
+          this.$message.success(res.data.data.msg);
+
+          this.getTable();
+        } else {
+          this.$message.warning(res.data.data.msg);
+        }
+      });
+    },
+    getTable() {
+      let params = {
+        shortcutKeyName: this.formInline.name,
+        quickType: this.formInline.type
+      };
+      apiSend.quickList({ data: params }).then(res => {
+        // console.log(res)
+        res.data.data.list;
+        if (res.data.data.list.length != 0) {
+          res.data.data.list.forEach(item => {
+            item.quickType = item.quickType
+              ? item.quickType == "1"
+                ? true
+                : false
+              : false;
+          });
+        }
+        this.tableData = res.data.data.list;
+      });
+    },
+    setUse(row,e) {
+      // console.log(e,row);
+      // return;
+      row.quickType = row.quickType ? '1' : '0';
+      this.modalInfo = {
+        title: "修改快捷键导航",
+        showModal: false,
+        ...row
+      };
+      let params = {
+        functionalDescription: row.functionalDescription,
+        quickType: row.quickType,
+        shortcutIconBlob: row.shortcutIconBlob,
+        shortcutId: row.shortcutId,
+        shortcutKeyName: row.shortcutKeyName,
+        url: row.url
+      };
+      // console.log(params);
+      apiSend['quickUpdate']({
+        data: params
+      }).then(res => {
+        if (res.data.data.code == 0) {
+          // this.modalInfo.showModal = false;
+          // this.$message.success(res.data.data.msg);
+          this.getTable();
+          
+        }
+      });
+    },
+    deleteClick(row) {
+      this.$confirm("进行删除操作, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(res => {
+        let params = {
+          ids: row.shortcutId
+        };
+        apiSend.quickDelete({ data: params }).then(res => {
+          if (res.data.data.code == 0) {
+            this.$message.success(res.data.data.msg);
+            this.getTable();
+          } else {
+            this.$message.warning(res.data.data.msg);
+          }
+        });
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -217,7 +315,7 @@ export default {
 //     margin-right: 50px;
 //   }
 // }
-.page-wrapper {
+.administration-wrapper {
   //   .el-divider--horizontal {
   //     margin: 5px auto;
   //   }
@@ -260,10 +358,7 @@ export default {
     .buttons {
       border: 1px solid darkturquoise;
     }
-    .buttonb {
-      border: 1px solid darkturquoise;
-      margin-left: 20px;
-    }
+
     /deep/ .el-form-item {
       margin-right: 60px;
       display: flex;
@@ -273,12 +368,21 @@ export default {
       }
     }
   }
+  .el-form {
+    .buttonb {
+      // border: 1px solid darkturquoise;
+      // margin-left: 20px;
+      margin-left: 100px;
+    }
+  }
   /deep/ .cell a {
     margin-left: 6px;
     color: #333;
   }
   ////////问题
   .formbottom {
+    display: flex;
+    flex-direction: column;
     /deep/ .el-form-item__content {
       min-width: 280px;
     }

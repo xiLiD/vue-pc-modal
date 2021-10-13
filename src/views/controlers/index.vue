@@ -13,13 +13,14 @@
         :key="item.name"
         :closable="item.route != 'workTable'"
         :name="item.name"
-      >
-      </el-tab-pane>
+      ></el-tab-pane>
     </el-tabs>
     <div class="iframe-wrapper">
       <div class="iframe-container">
-        <div>
-          <iframe
+        <router-view v-if="current > 0"  class="route-view"></router-view>
+        <div class="iframe-box" v-else>
+          <keep-alive>
+            <iframe
             :src="item.redirect"
             ref="iframe"
             frameborder="0"
@@ -29,10 +30,8 @@
             :key="item.id"
             v-show="tabs == item.name"
           ></iframe>
+          </keep-alive>
         </div>
-        <keep-alive>
-          <router-view v-show="current > 0"></router-view
-        ></keep-alive>
       </div>
     </div>
   </div>
@@ -46,7 +45,7 @@ const { mapState, mapMutations } = createNamespacedHelpers("worker");
 const { setRoutes, setTabs } = mapMutations(["setRoutes", "setTabs"]);
 export default {
   components: {
-    iframeTarget,
+    iframeTarget
   },
   data() {
     return {
@@ -54,7 +53,7 @@ export default {
       // editableTabs: [],
       tabIndex: 1,
       bindUrl: "",
-      closeable: true,
+      closeable: true
     };
   },
   computed: {
@@ -63,24 +62,35 @@ export default {
         return state.tabs;
       },
       iframes(state) {
-        return state.workRoutes.filter((item) => item.route == "iframe");
+        return state.workRoutes.filter(item => item.route == "iframe");
       },
       current(state) {
         console.log(state);
         return state.workRoutes.filter(
-          (item) => item.route != "iframe" && state.tabs == item.name
+          item => item.route != "iframe" && state.tabs == item.name
         ).length;
       },
       routes(state) {
         console.log(state);
-        return state.workRoutes.filter((item) => item.name == state.tabs);
-      },
+        return state.workRoutes.filter(item => item.name == state.tabs);
+      }
     }),
-    getWidth() {
-      return window.innerWidth - 20 - 20 + "px";
+    getWidth: {
+      get() {
+        return window.innerWidth - 40 + "px";
+      },
+      set(v) {
+        return v + "px";
+      }
     },
-    getHeight() {
-      return window.innerHeight - 61 + "px";
+
+    getHeight: {
+      get() {
+        return window.innerHeight - 51 + "px";
+      },
+      set(v) {
+        return v + "px";
+      }
     },
     editableTabs: {
       get() {
@@ -88,7 +98,7 @@ export default {
       },
       set(v) {
         setRoutes.call(this, v);
-      },
+      }
     },
     tabs_value: {
       get() {
@@ -96,20 +106,28 @@ export default {
       },
       set(v) {
         setTabs.call(this, v);
-      },
-    },
+      }
+    }
+  },
+  mounted() {
+    let that = this;
+    window.onresize = function() {
+      that.getHeight = window.innerHeight - 76 + "px";
+      that.getWidth = window.innerWidth - 40 + "px";
+    };
   },
   methods: {
     tabClick(e) {
-      let eArr = this.editableTabs.filter((item) => item.name == e.name);
+      let eArr = this.editableTabs.filter(item => item.name == e.name);
       // this.$store.commit("worker/setTabs", eArr[0].name);
       setTabs.call(this, eArr[0].name);
       if (eArr[0].route != "iframe") {
+        console.log("1111111111");
         this.$router.push({
           name: eArr[0].route,
           params: {
-            src: eArr[0].redirect,
-          },
+            src: eArr[0].redirect
+          }
         });
       }
     },
@@ -118,7 +136,7 @@ export default {
       this.editableTabs.push({
         title: "New Tab",
         name: newTabName,
-        content: "New Tab content",
+        content: "New Tab content"
       });
       this.tabs_value = newTabName;
     },
@@ -141,20 +159,20 @@ export default {
       }
       setTabs.call(this, activeName);
       // this.$store.commit("worker/setTabs", activeName);
-      this.editableTabs = tabs.filter((tab) => tab.name !== targetName);
+      this.editableTabs = tabs.filter(tab => tab.name !== targetName);
       setRoutes.call(this, this.editableTabs);
       // this.$store.commit("worker/setRoutes", this.editableTabs);
       let target = {
-        path: routeTarget.route || "workTable",
+        path: routeTarget.route || "workTable"
       };
       if (routeTarget.route == "iframe") {
         target.query = {
-          src: routeTarget.redirect,
+          src: routeTarget.redirect
         };
       }
       this.$router.push(target);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="less">
@@ -165,7 +183,7 @@ export default {
     top: 0;
     left: 0;
     background: #fff;
-    z-index: 99999;
+    z-index: 99;
     /deep/ .el-tabs__header {
       margin-bottom: 5px;
     }
@@ -193,7 +211,17 @@ export default {
   }
   iframe {
     width: 100%;
-    min-height: calc(100vh - 56px - 40px - 60px);
+    height: calc(100vh - 86px);
+  }
+  .iframe-box {
+    padding: 10px 0;
+  }
+  .route-view {
+    height: calc(100vh - 66px);
+    width: 100%;
+  }
+  .warning-line {
+    background: rgb(245,247,250);
   }
 }
 </style>

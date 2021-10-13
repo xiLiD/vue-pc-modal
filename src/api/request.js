@@ -13,9 +13,13 @@ let httpRequest = axios.create()
 httpRequest.interceptors.request.use(
   config => {
     // console.log('请求拦截器成功!',config)
-    if (store.state.worker.token) {
-      config.headers.token = store.state.worker.token;
-    }
+    // if (store.state.worker.userInfo) {
+    //   config.headers.['X-CSRF-TOKEN'] = store.state.worker.userInfo.staffNo;
+    // }
+    // if (store.state.iopStore.userInfo) {
+      
+    // }
+    config.headers['X-CSRF-TOKEN'] = store.state.iopStore.token || window.sessionStorage.getItem('token');
     // config.transformRequest = [function (data) {
     //   // 在请求之前对data传参进行格式转换
     //   console.log(data)
