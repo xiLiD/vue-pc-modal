@@ -32,6 +32,7 @@
           highlight-current
           :props="defaultProps"
           @node-click="treeClick"
+          @node-expand="treeClick"
         >
         </el-tree>
         <!-- <el-form>
@@ -293,6 +294,7 @@ export default {
     },
     setChildren(arr, target, requestArr) {
       arr.forEach((item) => {
+        console.log(item.label,target.label)
         if (item.label == target.label) {
           item.children = requestArr;
           item.foreFather = target.foreFather;
